@@ -1,0 +1,35 @@
+﻿using System;
+
+namespace Ockham.Data
+{ 
+    public static partial class Convert
+    {
+        public static object Force(object value, Type targetType) => throw null;
+        public static T Force<T>(object value) => throw null;
+        public static T Force<T>(object value, T defaultValue) => throw null;
+        public static T To<T>(object value) => throw null;
+        public static T To<T>(object value, ConvertOptions options) => throw null;
+        public static object To(object value, Type targetType) => throw null;
+        public static object To(object value, Type targetType, ConvertOptions options) => throw null;
+         
+        public static object ToNull(object value, bool emptyStringAsNull = true) => throw null;
+        public static object ToNull(object value, ConvertOptions options) => throw null;
+        public static object ToDBNull(object value, bool emptyStringAsNull = true) => throw null;
+        public static object ToDBNull(object value, ConvertOptions options) => throw null;
+    }
+
+    public static partial class Convert
+    { 
+        // These type-specific overloads use the ConvertOptions.Default set of options,
+        // which behave as close as possible to the applicable BCL utilities.
+        public static bool ToBool(object value) => throw null;
+        public static DateTime ToDate(object value) => throw null;
+        public static decimal ToDec(object value) => throw null;
+        public static double ToDbl(object value) => throw null;
+        public static Guid ToGuid(object value) => throw null;
+        public static int ToInt(object value) => throw null;
+        public static long ToLng(object value) => throw null;
+        public static string ToStr(object value) => throw null;
+        public static TimeSpan ToTimeSpan(object value) => throw null; 
+    }
+}

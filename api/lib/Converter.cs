@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Ockham.Data
 {
-    public delegate object ConverterDelegate(object value, Type targetType, ConvertOptions options);
-    public delegate object ConverterDelegate<T>(object value, ConvertOptions options);
+    public delegate object ConverterDelegate(object value, ConvertOptions options);
+    public delegate T ConverterDelegate<T>(object value, ConvertOptions options);
 
     public partial class Converter
     {
@@ -43,5 +43,6 @@ namespace Ockham.Data
         public long ToLng(object value) => throw null;
         public string ToStr(object value) => throw null;
         public TimeSpan ToTimeSpan(object value) => throw null;
-    }
+    } 
 }
+

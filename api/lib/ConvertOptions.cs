@@ -29,14 +29,14 @@ namespace Ockham.Data
 
     public class ConvertOptionsBuilder<T> where T : ConvertOptions
     {
-        public T Build() => throw null;
+        public T Options => throw null;
 
         public ConvertOptionsBuilder<T> WithStringOptions(EmptyStringConvertOptions emptyStringOptions, bool allowHex = false, bool trim = false) => throw null;
         public ConvertOptionsBuilder<T> WithBoolOptions(IEnumerable<string> trueStrings, IEnumerable<string> falseStrings) => throw null;
         public ConvertOptionsBuilder<T> WithEnumOptions(UndefinedValueOption undefinedNames, UndefinedValueOption undefinedValues) => throw null;
         public ConvertOptionsBuilder<T> WithValueTypeOptions(ValueTypeOptions valueTypeOptions) => throw null;
         public ConvertOptionsBuilder<T> WithTrueStrings(params string[] trueStrings) => throw null;
-        public ConvertOptionsBuilder<T> WithFlaseStrings(params string[] falseStrings) => throw null;
+        public ConvertOptionsBuilder<T> WithFalseStrings(params string[] falseStrings) => throw null;
     }
 
     public class ConvertOptionsBuilder : ConvertOptionsBuilder<ConvertOptions>

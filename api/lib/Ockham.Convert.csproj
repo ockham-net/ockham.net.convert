@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NoWarn>1701;1702;1705;CS1591;IDE0060</NoWarn>
+  </PropertyGroup>
+  
+  <Import Project="..\..\build\assembly\Properties.csproj" />
+  
+  <ItemGroup>
+    <Compile Remove="Converter.cs" />
+  </ItemGroup>
+
+</Project>

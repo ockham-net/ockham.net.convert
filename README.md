@@ -8,7 +8,7 @@ The utilities in this library provide robust, configurable data inspection and c
 
 # The API
 
-The most basic operation is to convert from a value of an unknown type (`object`) to a specific type, using either generic syntax (when you know the target type at compile time) or non-generic sytax (when you need to specify the target type at runtime):
+The most basic operation is to convert from a value of an unknown type (`object`) to a specific type, using either generic syntax (when you know the target type at compile time) or non-generic syntax (when you need to specify the target type at runtime):
 
 ```C#
 using Ockham.Data;

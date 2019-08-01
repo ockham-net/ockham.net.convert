@@ -83,7 +83,7 @@ var options = ConvertOptionsBuilder.Create()
   .WithStringOptions(emptyStringOptions: EmptyStringConvertOptions.WhitespaceAsNull, allowHex: true)
   .WithTrueStrings(bool.TrueString, 't', 'x', 'y')
   .WithFalseStrings(bool.FalseString, 'f', '', 'x')
-  .Build();
+  .Options;
 
 var converter = new Converter(options);
 

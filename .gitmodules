@@ -1,0 +1,3 @@
+[submodule "ref\\ockham.net"]
+	path = ref\\ockham.net
+	url = https://github.com/ockham-net/ockham.net.git

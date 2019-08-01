@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net472;netcoreapp2.2</TargetFrameworks>
+    <NoWarn>1701;1702;1705</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Ockham.NET.Convert</PackageId>
+    <Title>Ockham.NET Data Conversion Utilities</Title>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl></PackageProjectUrl>
+    <Description>A simple and flexible API for converting primitive data types</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ockham-net/exp-ockham.net.convert</PackageProjectUrl>
+
+    <RepositoryUrl>https://github.com/ockham-net/exp-ockham.net.convert.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    
+    <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <Import Project="..\..\build\assembly\Properties.csproj" />
+
+  <ItemGroup>
+    <Compile Remove="Converter\**" />
+    <EmbeddedResource Remove="Converter\**" />
+    <None Remove="Converter\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+  </ItemGroup>
+  
+</Project>

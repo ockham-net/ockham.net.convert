@@ -1,0 +1,73 @@
+﻿<Project>
+
+  <!-- Package and file versioning -->
+  <PropertyGroup>
+    <MajorVersion>1</MajorVersion>
+    <MinorVersion>0</MinorVersion>
+    <BuildVersion>0</BuildVersion>
+
+    <!-- MinorBuildVersion should only be used in a pre-release suffix  -->
+    <MinorBuildVersion>0</MinorBuildVersion>
+
+    <BaseVersion>$(MajorVersion).$(MinorVersion).$(BuildVersion)</BaseVersion>
+  </PropertyGroup>
+
+  <!-- Standard compilation constant to fence .NET Framework-only code. Add additional clauses to Condition as necessary if targeting other netxx versions -->
+  <PropertyGroup Condition="('$(TargetFramework)' == 'net47') OR ('$(TargetFramework)' == 'net471') OR ('$(TargetFramework)' == 'net472')">
+    <FrameworkType>netframework</FrameworkType>
+    <DefineConstants>NETFRAMEWORK</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="('$(TargetFramework)' == 'netstandard2.0')">
+    <FrameworkType>netstandard</FrameworkType>
+    <DefineConstants>NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="('$(TargetFramework)' == 'netcoreapp2.0') OR ('$(TargetFramework)' == 'netcoreapp2.1') OR ('$(TargetFramework)' == 'netcoreapp2.2')">
+    <FrameworkType>netcoreapp</FrameworkType>
+    <DefineConstants>NETCOREAPP</DefineConstants>
+  </PropertyGroup>
+ 
+  <PropertyGroup>
+    <Version>$(BaseVersion)</Version>
+    <AssemblyVersion>$(BaseVersion)</AssemblyVersion>
+    <FileVersion>$(BaseVersion)</FileVersion>
+
+    <Product>Ockham.NET</Product>
+    <Company>Mallowfields LLC</Company>
+    <Authors>Joshua Honig</Authors>
+    <Copyright>Copyright 2019 Joshua Honig and contributors. All rights reserved.</Copyright>
+
+    <!-- Leave this! It is overridden if built with a correct configuration -->
+    <PackageVersion>invalid-package-id</PackageVersion>
+
+    <!-- Include pdb files in main package -->
+    <DebugSymbols>true</DebugSymbols>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageVersion>$(BaseVersion)</PackageVersion>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+ 
+  <PropertyGroup Condition="('$(Configuration)' == 'Release') AND ('$(ReleaseMode)' == 'Release')">
+    <PackageVersion>$(FileVersion)</PackageVersion>
+    <WarningsAsErrors>CS1591</WarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="('$(Configuration)' == 'Release') AND ('$(ReleaseMode)' != 'Release')">
+    <PackageVersion>$(FileVersion)-rc$(MinorBuildVersion)</PackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="('$(Configuration)' == 'Debug') AND ('$(ReleaseMode)' != 'Release')">
+    <PackageVersion>$(FileVersion)-rc$(MinorBuildVersion)-debug</PackageVersion>
+  </PropertyGroup>
+
+  <!-- Doc file -->
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+  
+</Project>

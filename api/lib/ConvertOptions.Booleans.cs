@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Ockham.Data
 {
@@ -6,7 +7,7 @@ namespace Ockham.Data
     public class BooleanConvertOptions : OptionSet
     {
         public BooleanConvertOptions(IEnumerable<string> trueStrings, IEnumerable<string> falseStrings) => throw null;
-        public IReadOnlyCollection<string> TrueStrings { get; }
-        public IReadOnlyCollection<string> FalseStrings { get; }
+        public IImmutableSet<string> TrueStrings { get; }
+        public IImmutableSet<string> FalseStrings { get; }
     }
 }

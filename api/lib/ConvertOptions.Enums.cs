@@ -3,6 +3,9 @@
     // *Immutable* set of enum convert options
     public class EnumConvertOptions : OptionSet
     {
+        // Settings that match BCL behavior
+        public static EnumConvertOptions Default { get; }
+
         public EnumConvertOptions(UndefinedValueOption undefinedNames, UndefinedValueOption undefinedValues) { }
         public UndefinedValueOption UndefinedValues { get; }
         public UndefinedValueOption UndefinedNames { get; }

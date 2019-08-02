@@ -5,6 +5,9 @@ namespace Ockham.Data
     // *Immutable* set of string convert options
     public class StringConvertOptions : OptionSet
     {
+        // Settings that match BCL behavior
+        public static StringConvertOptions Default { get; }
+
         public StringConvertOptions(StringAsNullOption asNullOption, TrimStringFlags trimFlags) { }
         public StringAsNullOption AsNullOption { get; }
         public TrimStringFlags TrimFlags { get; }
@@ -32,5 +35,5 @@ namespace Ockham.Data
         TrimStart = 0x1,
         TrimEnd = 0x2,
         TrimAll = 0x3
-    } 
+    }
 }

@@ -5,6 +5,9 @@ namespace Ockham.Data
 
     public class ValueTypeOptions : OptionSet
     {
+        // Settings that match BCL behavior
+        public static ValueTypeOptions Default { get; }
+
         public ValueTypeOptions(ValueTypeConvertFlags convertFlags) => throw null;
         public ValueTypeConvertFlags ConvertFlags { get; }
 

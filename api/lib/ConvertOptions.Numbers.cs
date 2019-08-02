@@ -5,6 +5,9 @@ namespace Ockham.Data
     // *Immutable* set of bool convert options
     public class NumberConvertOptions : OptionSet
     {
+        // Settings that match BCL behavior
+        public static NumberConvertOptions Default { get; }
+
         public NumberConvertOptions(ParseNumericStringFlags parseFlags) => throw null;
 
         public ParseNumericStringFlags ParseFlags { get; }

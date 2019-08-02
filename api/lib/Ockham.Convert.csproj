@@ -6,9 +6,5 @@
   </PropertyGroup>
   
   <Import Project="..\..\build\assembly\Properties.csproj" />
-  
-  <ItemGroup>
-    <Compile Remove="Converter.cs" />
-  </ItemGroup>
 
 </Project>

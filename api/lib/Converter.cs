@@ -29,7 +29,7 @@ namespace Ockham.Data
         public IReadOnlyDictionary<Type, ConverterDelegate> Converters { get; }
         public Converter WithConverter<T>(ConverterDelegate<T> @delegate) => throw null;
         public Converter WithConverter(Type targetType, ConverterDelegate @delegate) => throw null;
-        public Converter WithConverters((Type targetType, ConverterDelegate @delegate) converter, params (Type targetType, ConverterDelegate @delegate)[] converters) => throw null;
+        public Converter WithConverters(params (Type targetType, ConverterDelegate @delegate)[] converters) => throw null;
     }
 
     public partial class Converter

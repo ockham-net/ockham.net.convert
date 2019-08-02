@@ -18,7 +18,7 @@ namespace Ockham.Data
             EnumConvertOptions enumOptions,
             NumberConvertOptions numberOptions,
             StringConvertOptions stringOptions,
-            ValueTypeOptions valueTypeOptions,
+            ValueTypeConvertOptions valueTypeOptions,
             params OptionSet[] otherOptions
         ) : this((new OptionSet[] { booleanOptions, enumOptions, numberOptions, stringOptions, valueTypeOptions }).Concat(otherOptions)) { }
 
@@ -29,7 +29,7 @@ namespace Ockham.Data
         public EnumConvertOptions Enums { get; }
         public NumberConvertOptions Numbers { get; }
         public StringConvertOptions Strings { get; }
-        public ValueTypeOptions ValueTypes { get; }
+        public ValueTypeConvertOptions ValueTypes { get; }
 
         public T GetOptions<T>() where T : OptionSet => throw null;
 

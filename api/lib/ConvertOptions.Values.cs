@@ -3,12 +3,12 @@
 namespace Ockham.Data
 {
 
-    public class ValueTypeOptions : OptionSet
+    public class ValueTypeConvertOptions : OptionSet
     {
         // Settings that match BCL behavior
-        public static ValueTypeOptions Default { get; }
+        public static ValueTypeConvertOptions Default { get; }
 
-        public ValueTypeOptions(ValueTypeConvertFlags convertFlags) => throw null;
+        public ValueTypeConvertOptions(ValueTypeConvertFlags convertFlags) => throw null;
         public ValueTypeConvertFlags ConvertFlags { get; }
 
         public bool NullToValueDefault => ConvertFlags.HasFlag(ValueTypeConvertFlags.NullToValueDefault);

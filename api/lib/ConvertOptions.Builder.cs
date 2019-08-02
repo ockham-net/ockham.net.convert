@@ -8,6 +8,9 @@ namespace Ockham.Data
         // Intialize with empty options
         public static ConvertOptionsBuilder Empty => throw null;
 
+        // Initialize with default options
+        public static ConvertOptionsBuilder Default => throw null;
+
         // Initialize from existing ConvertOptions
         public static ConvertOptionsBuilder FromConvertOptions(ConvertOptions source) => throw null;
 

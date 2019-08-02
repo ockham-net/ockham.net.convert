@@ -12,7 +12,7 @@ namespace Ockham.Data
         public bool ParseHex => ParseFlags.HasFlag(ParseNumericStringFlags.HexString);
         public bool ParseOctal => ParseFlags.HasFlag(ParseNumericStringFlags.OctalString);
         public bool ParseBinary => ParseFlags.HasFlag(ParseNumericStringFlags.BinaryString);
-        public bool IgnoreDigitSeparator => ParseFlags.HasFlag(ParseNumericStringFlags.IgnoreDigitSeparator);
+        public bool AllowDigitSeparator => ParseFlags.HasFlag(ParseNumericStringFlags.AllowDigitSeparator);
     }
 
     [Flags]
@@ -22,6 +22,6 @@ namespace Ockham.Data
         HexString = 0x1,
         OctalString = 0x2,
         BinaryString = 0x4,
-        IgnoreDigitSeparator = 0x10
+        AllowDigitSeparator = 0x10
     }
 }

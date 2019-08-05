@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net472;netcoreapp2.2</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <NoWarn>1701;1702;1705</NoWarn>
+    <RootNamespace>Ockham.Data</RootNamespace>
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,7 +27,7 @@
   </PropertyGroup>
 
   <Import Project="..\..\build\assembly\Properties.csproj" />
-
+ 
   <ItemGroup>
     <Compile Remove="Converter\**" />
     <EmbeddedResource Remove="Converter\**" />
@@ -34,6 +36,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
   </ItemGroup>
-  
+
 </Project>

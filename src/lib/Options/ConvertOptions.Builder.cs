@@ -84,6 +84,7 @@ namespace Ockham.Data
         /// <param name="trueStrings">Strings to convert to true</param>
         /// <param name="falseStrings">Strings to convert to false</param>
         /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        /// <seealso cref="BooleanConvertOptions"/>
         public ConvertOptionsBuilder WithBoolOptions(IEnumerable<string> trueStrings, IEnumerable<string> falseStrings)
             => new ConvertOptionsBuilder(this, new BooleanConvertOptions(trueStrings, falseStrings));
 
@@ -93,6 +94,7 @@ namespace Ockham.Data
         /// </summary>
         /// <param name="trueStrings">Strings to convert to true</param>
         /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        /// <seealso cref="BooleanConvertOptions"/>
         public ConvertOptionsBuilder WithTrueStrings(params string[] trueStrings)
         {
             var boolOptions = GetOptions<BooleanConvertOptions>();
@@ -107,6 +109,7 @@ namespace Ockham.Data
         /// </summary>
         /// <param name="falseStrings">Strings to convert to false</param>
         /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        /// <seealso cref="BooleanConvertOptions"/>
         public ConvertOptionsBuilder WithFalseStrings(params string[] falseStrings)
         {
             var boolOptions = GetOptions<BooleanConvertOptions>();
@@ -122,22 +125,51 @@ namespace Ockham.Data
         /// <param name="undefinedNames"></param>
         /// <param name="undefinedValues"></param>
         /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        /// <seealso cref="EnumConvertOptions"/>
         public ConvertOptionsBuilder WithEnumOptions(UndefinedValueOption undefinedNames, UndefinedValueOption undefinedValues)
             => new ConvertOptionsBuilder(this, new EnumConvertOptions(undefinedNames, undefinedValues));
 
-
+        /// <summary>
+        /// Set or update the <see cref="NumberConvertOptions"/> with the provided parameters
+        /// </summary>
+        /// <param name="parseFlags">Flags controlling how to parse numeric strings</param>
+        /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        /// <see cref="NumberConvertOptions"/>
+        /// <see cref="ParseNumericStringFlags"/>
         public ConvertOptionsBuilder WithNumberOptions(ParseNumericStringFlags parseFlags)
             => new ConvertOptionsBuilder(this, new NumberConvertOptions(parseFlags));
 
+        /// <summary>
+        /// Set or update the <see cref="StringConvertOptions"/> with the provided parameters
+        /// </summary>
+        /// <param name="asNullOption">Determines which strings to treat as null</param>
+        /// <param name="trimFlags">Flags for indicating whether strings should be trimmed</param>
+        /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        /// <see cref="StringConvertOptions"/>
         public ConvertOptionsBuilder WithStringOptions(StringAsNullOption asNullOption, TrimStringFlags trimFlags)
             => new ConvertOptionsBuilder(this, new StringConvertOptions(asNullOption, trimFlags));
 
+        /// <summary>
+        /// Set or update the <see cref="ValueTypeConvertOptions"/> with the provided parameters
+        /// </summary>
+        /// <param name="convertFlags">Settings for converting to and from value types</param>
+        /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        /// <see cref="ValueTypeConvertOptions"/>
+        /// <see cref="ValueTypeConvertFlags"/>
         public ConvertOptionsBuilder WithValueTypeOptions(ValueTypeConvertFlags convertFlags)
             => new ConvertOptionsBuilder(this, new ValueTypeConvertOptions(convertFlags));
 
+        /// <summary>
+        /// Add or replace an <see cref="OptionSet"/> on this <see cref="ConvertOptionsBuilder"/>
+        /// </summary>
+        /// <param name="options">Any <see cref="OptionSet"/></param>
+        /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
         public ConvertOptionsBuilder WithOptions(OptionSet options)
             => new ConvertOptionsBuilder(this, options);
 
+        /// <summary>
+        /// Enumerate the <see cref="OptionSet"/>s in this <see cref="ConvertOptionsBuilder"/>
+        /// </summary>
         public IEnumerator<OptionSet> GetEnumerator() => _optionSets.Values.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

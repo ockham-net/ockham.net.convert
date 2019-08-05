@@ -32,6 +32,8 @@ namespace Ockham.Data
         public ValueTypeConvertOptions ValueTypes { get; }
 
         public T GetOptions<T>() where T : OptionSet => throw null;
+        public bool TryGetOptions<T>(out T optionSet) where T : OptionSet => throw null;
+        public bool HasOptions<T>() where T : OptionSet => throw null;
 
         public IEnumerable<OptionSet> AllOptions() => throw null;
     }

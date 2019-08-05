@@ -3,7 +3,8 @@
     public static class Value
     { 
         public static bool IsNumeric(object value) => throw null;
-        public static bool IsNumeric(object value, ConvertOptions options) => throw null; 
+        public static bool IsNumeric(object value, ConvertOptions options) => throw null;
+        public static bool IsNumeric(object value, ParseNumericStringFlags parseFlags) => throw null;
         public static bool IsDefault(object value) => throw null;
         public static bool IsNull(object value) => throw null;
         public static bool IsNull(object value, bool emptyStringAsNull) => throw null;

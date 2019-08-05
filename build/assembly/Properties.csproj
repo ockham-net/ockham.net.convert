@@ -63,6 +63,7 @@
 
   <PropertyGroup Condition="('$(Configuration)' == 'Debug') AND ('$(ReleaseMode)' != 'Release')">
     <PackageVersion>$(FileVersion)-rc$(MinorBuildVersion)-debug</PackageVersion>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 
   <!-- Doc file -->

@@ -3,12 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <NoWarn>1701;1702;1705;CS1591;IDE0060</NoWarn>
+    <AssemblyName>Ockham.Convert.API</AssemblyName>
   </PropertyGroup>
   
   <Import Project="..\..\build\assembly\Properties.csproj" />
   
   <ItemGroup>
-    <Compile Remove="Converter.cs" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
   </ItemGroup>
 
 </Project>

@@ -9,5 +9,13 @@
     <Import_RootNamespace>results</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)api\api.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)api\src.netstandard2.0.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)api\src.netstandard2.0.diff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)api\_excludeMembers.txt" />
   </ItemGroup>
 </Project>

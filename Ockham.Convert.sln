@@ -3,6 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_build", "_build", "{3B0AEBAA-8E41-4543-9979-BD90AF2D05E8}"
+	ProjectSection(SolutionItems) = preProject
+		test.ps1 = test.ps1
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{998429FD-9E34-4EB2-B0C6-09241D426A43}"
 EndProject

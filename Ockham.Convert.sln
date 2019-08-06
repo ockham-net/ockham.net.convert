@@ -18,8 +18,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ockham.Convert.Tests", "tes
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "build", "build\build.shproj", "{C9EEE568-9891-4643-9D4D-4F67005D74A4}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "results", "tests\results\results.shproj", "{C5E819C7-BBDF-47AD-BA64-9A137A474441}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		tests\results\results.projitems*{c5e819c7-bbdf-47ad-ba64-9a137a474441}*SharedItemsImports = 13
 		Build\Build.projitems*{c9eee568-9891-4643-9d4d-4f67005d74a4}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +51,7 @@ Global
 		{FE23EB38-D56C-4B6F-BC45-43E9B7CCC95C} = {26BCD9A0-AA81-4415-AFCF-2194B8AE9C49}
 		{BA287A39-F846-4355-8273-0F9CE17FA4C3} = {7ED89FB2-29B6-49EE-990C-44842967A0D3}
 		{C9EEE568-9891-4643-9D4D-4F67005D74A4} = {3B0AEBAA-8E41-4543-9979-BD90AF2D05E8}
+		{C5E819C7-BBDF-47AD-BA64-9A137A474441} = {7ED89FB2-29B6-49EE-990C-44842967A0D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F2E75385-1681-4D62-B833-7062B63987C4}

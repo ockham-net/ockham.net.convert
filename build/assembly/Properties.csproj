@@ -15,17 +15,17 @@
   <!-- Standard compilation constant to fence .NET Framework-only code. Add additional clauses to Condition as necessary if targeting other netxx versions -->
   <PropertyGroup Condition="('$(TargetFramework)' == 'net47') OR ('$(TargetFramework)' == 'net471') OR ('$(TargetFramework)' == 'net472')">
     <FrameworkType>netframework</FrameworkType>
-    <DefineConstants>NETFRAMEWORK</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="('$(TargetFramework)' == 'netstandard2.0')">
     <FrameworkType>netstandard</FrameworkType>
-    <DefineConstants>NETSTANDARD</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="('$(TargetFramework)' == 'netcoreapp2.0') OR ('$(TargetFramework)' == 'netcoreapp2.1') OR ('$(TargetFramework)' == 'netcoreapp2.2')">
     <FrameworkType>netcoreapp</FrameworkType>
-    <DefineConstants>NETCOREAPP</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETCOREAPP</DefineConstants>
   </PropertyGroup>
  
   <PropertyGroup>
@@ -61,8 +61,9 @@
     <PackageVersion>$(FileVersion)-rc$(MinorBuildVersion)</PackageVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="('$(Configuration)' == 'Debug') AND ('$(ReleaseMode)' != 'Release')">
+  <PropertyGroup Condition="('$(Configuration)' == 'Debug')">
     <PackageVersion>$(FileVersion)-rc$(MinorBuildVersion)-debug</PackageVersion>
+    <DefineConstants>$(DefineConstants);INSTRUMENT</DefineConstants>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 

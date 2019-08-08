@@ -11,7 +11,6 @@ namespace Ockham.Data
         public static Converter Default { get; } = new Converter(ConvertOptions.Default);
 
         public Converter(ConvertOptions options) => throw null;
-        public Converter(ConvertOptions options, params (Type targetType, ConverterDelegate @delegate)[] converters) => throw null;
 
         public ConvertOptions Options { get; }
 
@@ -25,11 +24,6 @@ namespace Ockham.Data
         public bool IsNull(object value) => throw null;
         public object ToNull(object value) => throw null;
         public object ToDBNull(object value) => throw null;
-
-        public IReadOnlyDictionary<Type, ConverterDelegate> Converters { get; }
-        public Converter WithConverter<T>(ConverterDelegate<T> @delegate) => throw null;
-        public Converter WithConverter(Type targetType, ConverterDelegate @delegate) => throw null;
-        public Converter WithConverters(params (Type targetType, ConverterDelegate @delegate)[] converters) => throw null;
     }
 
     public partial class Converter

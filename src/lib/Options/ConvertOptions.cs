@@ -25,7 +25,7 @@ namespace Ockham.Data
         /// <see cref="StringConvertOptions.Default"/>
         /// <see cref="ValueTypeConvertOptions.Default"/>
         public static ConvertOptions Default => _default.Value;
-         
+
         /// <summary>
         /// A dictionary of <see cref="Type"/> to custom converter functions with convert to that type
         /// </summary>
@@ -50,6 +50,11 @@ namespace Ockham.Data
             this.Numbers = this.GetOptions<NumberConvertOptions>() ?? throw new ArgumentNullException("numberOptions");
             this.Strings = this.GetOptions<StringConvertOptions>() ?? throw new ArgumentNullException("stringOptions");
             this.ValueTypes = this.GetOptions<ValueTypeConvertOptions>() ?? throw new ArgumentNullException("valueTypeOptions");
+
+            // Memoize enum options
+            this.IgnoreEnumNames = this.Enums.IgnoreUndefinedNames;
+            this.ThrowEnumValues = this.Enums.UndefinedValues == UndefinedValueOption.Throw;
+            this.CoerceEnumValues = this.Enums.CoerceUndefinedValues;
 
             this.FlattenedOptions = FlattenOptions(this);
             this.HasCustomConverters = this.Converters.Any();
@@ -127,7 +132,12 @@ namespace Ockham.Data
         internal bool StringToNull { get; }
         internal bool WhitespaceToNull { get; }
         internal bool NullToValueDefault { get; }
-        internal bool ParseBaseN { get; } 
+        internal bool ParseBaseN { get; }
+
+        internal bool IgnoreEnumNames { get; }
+        internal bool ThrowEnumValues { get; }
+        internal bool CoerceEnumValues { get; }
+
         internal ParseNumericStringFlags ParseFlage { get; }
 
         private static FlattenedOptions FlattenOptions(ConvertOptions options)

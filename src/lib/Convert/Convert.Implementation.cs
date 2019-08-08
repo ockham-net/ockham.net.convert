@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using VBConvert = Microsoft.VisualBasic.CompilerServices.Conversions;
 using System.Threading;
+using VBConvert = Microsoft.VisualBasic.CompilerServices.Conversions;
 
 namespace Ockham.Data
 {
@@ -127,13 +125,7 @@ namespace Ockham.Data
         /// Caller *guarantees* that <paramref name="targetType"/> is NOT a <see cref="Nullable{T}"/>, 
         /// that value is not empty per <paramref name="options"/>, and that value is not already <paramref name="targetType"/>
         /// </summary> 
-        private static object ToStructValue(
-            object value,
-            Type targetType,
-            ConvertOptions options,
-            bool ignoreError,
-            object valueOnError
-        )
+        internal static object ToStructValue(object value, Type targetType, ConvertOptions options, bool ignoreError, object valueOnError)
         {
             if (ignoreError)
             {
@@ -147,7 +139,9 @@ namespace Ockham.Data
                 }
             }
 
-            // First try custom converter
+            // ---------------------------------------------------------------------------
+            //  Custom converters
+            // ---------------------------------------------------------------------------
             if (options.HasCustomConverters && options.Converters.TryGetValue(targetType, out ConverterDelegate converter))
             {
                 return converter(value, options);
@@ -156,38 +150,11 @@ namespace Ockham.Data
             // ---------------------------------------------------------------------------
             //  Special treatment of Enums
             // ---------------------------------------------------------------------------
-            if (targetType.IsEnum)
-            {
-                // Test IsNumeric BEFORE testing string so that numeric strings are
-                // treated as numbers, not as enum member names
-                if (Value.IsNumeric(value, options))
-                {
-                    // If the input is a number or *numeric string*, first convert the 
-                    // input to an enum number value, then cast it using Enum.ToObject
+            if (targetType.IsEnum) return EnumConverter.ToEnumValue(value, targetType, options, ignoreError, valueOnError);
 
-                    // Note: DON'T ignore error on conversion to underlying type
-                    var rawValue = ToStructValue(value, Enum.GetUnderlyingType(targetType), options, false, null);
-                    return Enum.ToObject(targetType, rawValue);
-                }
-                else if (value is string)
-                {
-                    // Input is a string but Value.IsNumeric did not recognize it
-                    // as a number. So, treat the input as an enum member name
-                    string sEnumName = Regex.Replace((string)value, @"[\s\r\n]+", "");
-                    return Enum.Parse(targetType, sEnumName, true);
-                }
-                else
-                {
-                    // Fallback: Attempt to convert the input to the underlying numeric type, even if
-                    // Value.IsNumeric returned false
-
-                    // Note: DON'T ignore error on underlying conversion type
-                    var rawValue = ToStructValue(value, Enum.GetUnderlyingType(targetType), options, false, null);
-                    return Enum.ToObject(targetType, rawValue);
-                }
-            } // end IsEnum
-
-            // Parse numeric baseN strings
+            // ---------------------------------------------------------------------------
+            //  Parse numeric baseN strings
+            // ---------------------------------------------------------------------------
             if (value is string stringValue)
             {
                 if (TypeInspection.IsNumberType(targetType))

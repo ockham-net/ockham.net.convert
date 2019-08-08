@@ -11,4 +11,13 @@ namespace Ockham.Data.Tests.Fixtures
         Two = 2,
         FortyNine = 49
     }
+
+    [Flags]
+    public enum TestFlags
+    {
+        None = 0x0,
+        Bit1 = 0x1,
+        Bit2 = 0x2,
+        Bit3 = 0x4
+    }
 }

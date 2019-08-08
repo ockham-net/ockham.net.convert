@@ -22,14 +22,14 @@ namespace Ockham.Data
     { 
         // These type-specific overloads use the ConvertOptions.Default set of options,
         // which behave as close as possible to the applicable BCL utilities.
-        public static bool ToBool(object value) => throw null;
-        public static DateTime ToDate(object value) => throw null;
-        public static decimal ToDec(object value) => throw null;
-        public static double ToDbl(object value) => throw null;
+        public static bool ToBoolean(object value) => throw null;
+        public static DateTime ToDateTime(object value) => throw null;
+        public static decimal ToDecimal(object value) => throw null;
+        public static double ToDouble(object value) => throw null;
         public static Guid ToGuid(object value) => throw null;
-        public static int ToInt(object value) => throw null;
-        public static long ToLng(object value) => throw null;
-        public static string ToStr(object value) => throw null;
+        public static int ToInt32(object value) => throw null;
+        public static long ToInt64(object value) => throw null;
+        public static string ToString(object value) => throw null;
         public static TimeSpan ToTimeSpan(object value) => throw null; 
     }
 }

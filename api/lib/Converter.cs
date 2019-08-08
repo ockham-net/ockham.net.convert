@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Ockham.Data
 {
@@ -11,7 +10,6 @@ namespace Ockham.Data
         public static Converter Default { get; } = new Converter(ConvertOptions.Default);
 
         public Converter(ConvertOptions options) => throw null;
-        public Converter(ConvertOptions options, params (Type targetType, ConverterDelegate @delegate)[] converters) => throw null;
 
         public ConvertOptions Options { get; }
 
@@ -25,23 +23,18 @@ namespace Ockham.Data
         public bool IsNull(object value) => throw null;
         public object ToNull(object value) => throw null;
         public object ToDBNull(object value) => throw null;
-
-        public IReadOnlyDictionary<Type, ConverterDelegate> Converters { get; }
-        public Converter WithConverter<T>(ConverterDelegate<T> @delegate) => throw null;
-        public Converter WithConverter(Type targetType, ConverterDelegate @delegate) => throw null;
-        public Converter WithConverters(params (Type targetType, ConverterDelegate @delegate)[] converters) => throw null;
     }
 
     public partial class Converter
     {
-        public bool ToBool(object value) => throw null;
-        public DateTime ToDate(object value) => throw null;
-        public decimal ToDec(object value) => throw null;
-        public double ToDbl(object value) => throw null;
+        public bool ToBoolean(object value) => throw null;
+        public DateTime ToDateTime(object value) => throw null;
+        public decimal ToDecimal(object value) => throw null;
+        public double ToDouble(object value) => throw null;
         public Guid ToGuid(object value) => throw null;
-        public int ToInt(object value) => throw null;
-        public long ToLng(object value) => throw null;
-        public string ToStr(object value) => throw null;
+        public int ToInt32(object value) => throw null;
+        public long ToInt64(object value) => throw null;
+        public string ToString(object value) => throw null;
         public TimeSpan ToTimeSpan(object value) => throw null;
     } 
 }

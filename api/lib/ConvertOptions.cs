@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Ockham.Data
 {
@@ -12,24 +12,17 @@ namespace Ockham.Data
         // generally do NOT allow converting null to a value type, but do allow converting null to a
         // Nullable<T> struct. Thus Convert.To<int>(null) should throw, but Convert.To<int?>(null) should be ok.
         public static ConvertOptions Default { get; }
-
-        public ConvertOptions(
-            BooleanConvertOptions booleanOptions,
-            EnumConvertOptions enumOptions,
-            NumberConvertOptions numberOptions,
-            StringConvertOptions stringOptions,
-            ValueTypeConvertOptions valueTypeOptions,
-            params OptionSet[] otherOptions
-        ) : this((new OptionSet[] { booleanOptions, enumOptions, numberOptions, stringOptions, valueTypeOptions }).Concat(otherOptions)) { }
-
-        public ConvertOptions(params OptionSet[] options) : this((IEnumerable<OptionSet>)options) { }
-        public ConvertOptions(IEnumerable<OptionSet> options) { }
+         
+        public ConvertOptions(IEnumerable<OptionSet> options) => throw null;
+        public ConvertOptions(IEnumerable<OptionSet> options, IReadOnlyDictionary<Type, ConverterDelegate> converters) => throw null;
 
         public BooleanConvertOptions Booleans { get; }
         public EnumConvertOptions Enums { get; }
         public NumberConvertOptions Numbers { get; }
         public StringConvertOptions Strings { get; }
         public ValueTypeConvertOptions ValueTypes { get; }
+
+        public IReadOnlyDictionary<Type, ConverterDelegate> Converters { get; }
 
         public T GetOptions<T>() where T : OptionSet => throw null;
         public bool TryGetOptions<T>(out T optionSet) where T : OptionSet => throw null;

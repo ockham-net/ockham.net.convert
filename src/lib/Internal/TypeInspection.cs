@@ -9,7 +9,7 @@ namespace Ockham.Data
     /// </summary>
     internal class TypeInspection
     {
-        /*
+
         /// <summary>
         /// Determine if the specified type inherits from <see cref="System.Nullable{T}"/>
         /// </summary>
@@ -17,30 +17,8 @@ namespace Ockham.Data
         /// <returns></returns>
         public static bool IsNullableOfT(Type type)
         {
-            var typeInfo = type.GetTypeInfo();
-            return typeInfo.IsGenericType && !typeInfo.IsGenericTypeDefinition && (type.GetGenericTypeDefinition() == typeof(Nullable<>));
+            return type.IsGenericType && !type.IsGenericTypeDefinition && (type.GetGenericTypeDefinition() == typeof(Nullable<>));
         }
-
-        /// <summary>
-        /// Determine if the specified type inherits from <see cref="System.Nullable{T}"/>, and return the inner type if it is 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="elementType"></param>
-        /// <returns></returns>
-        public static bool IsNullableOfT(Type type, ref Type elementType)
-        {
-            if (IsNullableOfT(type))
-            {
-                elementType = type.GetTypeInfo().GenericTypeArguments[0];
-                return true;
-            }
-            else
-            {
-                elementType = null;
-                return false;
-            }
-        }
-        */
 
         /// <summary>
         /// Determine if the specified type is a numeric (integer, float, or decimal) type. Returns true for enums.
@@ -52,7 +30,7 @@ namespace Ockham.Data
 
         private static bool _IsNumberType(Type type, bool integersOnly)
         {
-            if (type.GetTypeInfo().IsEnum) return true;
+            if (type.IsEnum) return true;
 
             switch (Type.GetTypeCode(type))
             {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Ockham.Data
 {
@@ -28,14 +27,14 @@ namespace Ockham.Data
 
     public partial class Converter
     {
-        public bool ToBool(object value) => throw null;
-        public DateTime ToDate(object value) => throw null;
-        public decimal ToDec(object value) => throw null;
-        public double ToDbl(object value) => throw null;
+        public bool ToBoolean(object value) => throw null;
+        public DateTime ToDateTime(object value) => throw null;
+        public decimal ToDecimal(object value) => throw null;
+        public double ToDouble(object value) => throw null;
         public Guid ToGuid(object value) => throw null;
-        public int ToInt(object value) => throw null;
-        public long ToLng(object value) => throw null;
-        public string ToStr(object value) => throw null;
+        public int ToInt32(object value) => throw null;
+        public long ToInt64(object value) => throw null;
+        public string ToString(object value) => throw null;
         public TimeSpan ToTimeSpan(object value) => throw null;
     } 
 }

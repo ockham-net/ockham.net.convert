@@ -1,0 +1,49 @@
+﻿diff --git a/D:/src/ockham/ockham.net.convert/tests/results/api/api.cs b/D:/src/ockham/ockham.net.convert/tests/results/api/src.netstandard2.0.cs
+index e78d390..40d1d5e 100644
+--- a/D:/src/ockham/ockham.net.convert/tests/results/api/api.cs
++++ b/D:/src/ockham/ockham.net.convert/tests/results/api/src.netstandard2.0.cs
+@@ -20,19 +20,6 @@
+         public static object To(object value, Type targetType, ConvertOptions options);
+         public static T To<T>(object value);
+         public static T To<T>(object value, ConvertOptions options);
+-        public static bool ToBool(object value);
+-        public static DateTime ToDate(object value);
+-        public static double ToDbl(object value);
+-        public static object ToDBNull(object value, ConvertOptions options);
+-        public static object ToDBNull(object value, bool emptyStringAsNull=true);
+-        public static decimal ToDec(object value);
+-        public static Guid ToGuid(object value);
+-        public static int ToInt(object value);
+-        public static long ToLng(object value);
+-        public static object ToNull(object value, ConvertOptions options);
+-        public static object ToNull(object value, bool emptyStringAsNull=true);
+-        public static string ToStr(object value);
+-        public static TimeSpan ToTimeSpan(object value);
+     }
+     public class Converter
+     {
+@@ -41,24 +28,6 @@
+         public IReadOnlyDictionary<Type, ConverterDelegate> Converters { get; }
+         public static Converter Default { get; }
+         public ConvertOptions Options { get; }
+-        public object Force(object value, Type targetType);
+-        public T Force<T>(object value);
+-        public T Force<T>(object value, T defaultValue);
+-        public bool IsNull(object value);
+-        public bool IsNumeric(object value);
+-        public object To(object value, Type targetType);
+-        public T To<T>(object value);
+-        public bool ToBool(object value);
+-        public DateTime ToDate(object value);
+-        public double ToDbl(object value);
+-        public object ToDBNull(object value);
+-        public decimal ToDec(object value);
+-        public Guid ToGuid(object value);
+-        public int ToInt(object value);
+-        public long ToLng(object value);
+-        public object ToNull(object value);
+-        public string ToStr(object value);
+-        public TimeSpan ToTimeSpan(object value);
+         public Converter WithConverter(Type targetType, ConverterDelegate @delegate);
+         public Converter WithConverter<T>(ConverterDelegate<T> @delegate);
+         public Converter WithConverters(params ValueTuple<Type, ConverterDelegate>[] converters);

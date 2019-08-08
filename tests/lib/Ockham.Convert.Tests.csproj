@@ -30,4 +30,8 @@
     <ProjectReference Include="..\..\src\lib\Ockham.Convert.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+
 </Project>

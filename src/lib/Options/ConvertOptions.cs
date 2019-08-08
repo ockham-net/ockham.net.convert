@@ -10,7 +10,7 @@ namespace Ockham.Data
     /// Options for controlling data type conversions executed by Ockham.Data.Convert
     /// This class is immutable. <see cref="ConvertOptionsBuilder"/> may be used to configure an options instance
     /// </summary>
-    public class ConvertOptions
+    public partial class ConvertOptions
     {
         private static readonly Lazy<ConvertOptions> _default = new Lazy<ConvertOptions>(() => new ConvertOptions(
             BooleanConvertOptions.Default,
@@ -75,6 +75,9 @@ namespace Ockham.Data
             this.FlattenedOptions = FlattenOptions(this);
             this.WhitespaceToNull = this.Strings.WhitespaceAsNull;
             this.StringToNull = this.WhitespaceToNull || this.Strings.EmptyStringAsNull;
+            this.NullToValueDefault = this.ValueTypes.NullToValueDefault;
+            this.ParseBaseN = this.Numbers.ParseHex | this.Numbers.ParseOctal | this.Numbers.ParseBinary;
+            this.ParseFlage = this.Numbers.ParseFlags;
         }
 
         /// <summary>
@@ -142,6 +145,9 @@ namespace Ockham.Data
 
         internal bool StringToNull { get; }
         internal bool WhitespaceToNull { get; }
+        internal bool NullToValueDefault { get; }
+        internal bool ParseBaseN { get; }
+        internal ParseNumericStringFlags ParseFlage { get; }
 
         private static FlattenedOptions FlattenOptions(ConvertOptions options)
         {

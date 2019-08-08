@@ -16,8 +16,6 @@ namespace Ockham.Data.Tests
         public static bool HasBitFlag<T>(this T value, T flags) where T : struct, IComparable, IConvertible, IFormattable
         {
             return ((Enum)(object)value).HasFlag((Enum)(object)flags);
-        }
-
+        } 
     }
-
 }

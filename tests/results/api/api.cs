@@ -1,5 +1,9 @@
-namespace Ockham.Data
+﻿namespace Ockham.Data
 {
+    public static class BoolConverter
+    {
+        public static bool ToBool(object value, ConvertOptions options);
+    }
     public class BooleanConvertOptions : OptionSet
     {
         public BooleanConvertOptions(IEnumerable<string> trueStrings, IEnumerable<string> falseStrings);
@@ -7,6 +11,60 @@ namespace Ockham.Data
         public IImmutableSet<string> FalseStrings { get; }
         public IImmutableSet<string> TrueStrings { get; }
     }
+    public static class Convert
+    {
+        public static object Force(object value, Type targetType);
+        public static T Force<T>(object value);
+        public static T Force<T>(object value, T defaultValue);
+        public static object To(object value, Type targetType);
+        public static object To(object value, Type targetType, ConvertOptions options);
+        public static T To<T>(object value);
+        public static T To<T>(object value, ConvertOptions options);
+        public static bool ToBool(object value);
+        public static DateTime ToDate(object value);
+        public static double ToDbl(object value);
+        public static object ToDBNull(object value, ConvertOptions options);
+        public static object ToDBNull(object value, bool emptyStringAsNull=true);
+        public static decimal ToDec(object value);
+        public static Guid ToGuid(object value);
+        public static int ToInt(object value);
+        public static long ToLng(object value);
+        public static object ToNull(object value, ConvertOptions options);
+        public static object ToNull(object value, bool emptyStringAsNull=true);
+        public static string ToStr(object value);
+        public static TimeSpan ToTimeSpan(object value);
+    }
+    public class Converter
+    {
+        public Converter(ConvertOptions options);
+        public Converter(ConvertOptions options, params ValueTuple<Type, ConverterDelegate>[] converters);
+        public IReadOnlyDictionary<Type, ConverterDelegate> Converters { get; }
+        public static Converter Default { get; }
+        public ConvertOptions Options { get; }
+        public object Force(object value, Type targetType);
+        public T Force<T>(object value);
+        public T Force<T>(object value, T defaultValue);
+        public bool IsNull(object value);
+        public bool IsNumeric(object value);
+        public object To(object value, Type targetType);
+        public T To<T>(object value);
+        public bool ToBool(object value);
+        public DateTime ToDate(object value);
+        public double ToDbl(object value);
+        public object ToDBNull(object value);
+        public decimal ToDec(object value);
+        public Guid ToGuid(object value);
+        public int ToInt(object value);
+        public long ToLng(object value);
+        public object ToNull(object value);
+        public string ToStr(object value);
+        public TimeSpan ToTimeSpan(object value);
+        public Converter WithConverter(Type targetType, ConverterDelegate @delegate);
+        public Converter WithConverter<T>(ConverterDelegate<T> @delegate);
+        public Converter WithConverters(params ValueTuple<Type, ConverterDelegate>[] converters);
+    }
+    public delegate object ConverterDelegate(object value, ConvertOptions options);
+    public delegate T ConverterDelegate<T>(object value, ConvertOptions options);
     public class ConvertOptions
     {
         public ConvertOptions(BooleanConvertOptions booleanOptions, EnumConvertOptions enumOptions, NumberConvertOptions numberOptions, StringConvertOptions stringOptions, ValueTypeConvertOptions valueTypeOptions, params OptionSet[] otherOptions);
@@ -54,6 +112,10 @@ namespace Ockham.Data
         public UndefinedValueOption UndefinedNames { get; }
         public UndefinedValueOption UndefinedValues { get; }
     }
+    public static class GuidConverter
+    {
+        public static Guid ToGuid(object value, ConvertOptions options);
+    }
     public class NumberConvertOptions : OptionSet
     {
         public NumberConvertOptions(ParseNumericStringFlags parseFlags);
@@ -94,6 +156,10 @@ namespace Ockham.Data
         public bool TrimNone { get; }
         public bool TrimStart { get; }
         public bool WhitespaceAsNull { get; }
+    }
+    public static class TimeSpanConverter
+    {
+        public static TimeSpan ToTimeSpan(object value, ConvertOptions options);
     }
     public enum TrimStringFlags
     {

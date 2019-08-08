@@ -122,12 +122,11 @@ namespace Ockham.Data.Tests
             Assert.True(Value.IsNumeric(value));
         }
 
-        [Theory(DisplayName = "Default:Reject Separator")]
+        [Theory]
         [MemberData(nameof(SeparatedStrings))]
         public void IsNumeric_RejectSeparatedString(object value)
         {
             Assert.False(Value.IsNumeric(value));
-
         }
 
         [Theory]

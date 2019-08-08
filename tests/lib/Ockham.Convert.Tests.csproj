@@ -24,6 +24,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <Import Project="..\..\build\assembly\Properties.csproj" />
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\lib\Ockham.Convert.csproj" />
   </ItemGroup>

@@ -42,6 +42,6 @@ namespace Ockham.Data.Tests.Fixtures
         public static ConvertOptionsBuilder WithComplexNumberOptions(
             this ConvertOptionsBuilder builder,
             ComplexNumberElement convertToFlags
-        ) => new ConvertOptionsBuilder(builder, new ComplexNumberConvertOptions(convertToFlags));
+        ) => builder.WithOptions(new ComplexNumberConvertOptions(convertToFlags));
     }
 }

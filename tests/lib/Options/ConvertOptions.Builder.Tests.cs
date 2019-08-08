@@ -1,4 +1,5 @@
 ﻿using Ockham.Data.Tests.Fixtures;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
@@ -8,14 +9,6 @@ namespace Ockham.Data.Tests
     [ExcludeFromCodeCoverage]
     public class ConvertOptionsBuilderTests
     {
-        [Fact]
-        public void Ctor_Empty()
-        {
-            var builder = new ConvertOptionsBuilder();
-            Assert.NotNull(builder);
-            Assert.Empty(builder);
-        }
-
         [Fact]
         public void Ctor_Enumerable()
         {
@@ -27,7 +20,7 @@ namespace Ockham.Data.Tests
                 complexOptions
             };
 
-            var builder = new ConvertOptionsBuilder(options);
+            var builder = new ConvertOptionsBuilder(options, null);
             Assert.NotNull(builder);
             Assert.Contains(BooleanConvertOptions.Default, builder);
             Assert.Contains(EnumConvertOptions.Default, builder);
@@ -36,7 +29,7 @@ namespace Ockham.Data.Tests
         }
 
         [Fact]
-        public void Ctor_Enumerable_Replace()
+        public void Ctor_ReplaceOptions()
         {
             // Second ComplexNumberConvertOptions should replace the first
             var complexOptions1 = new ComplexNumberConvertOptions(ComplexNumberElement.Real);
@@ -48,7 +41,8 @@ namespace Ockham.Data.Tests
                 complexOptions1
             };
 
-            var builder = new ConvertOptionsBuilder(options, complexOptions2);
+            var builder1 = new ConvertOptionsBuilder(options, null);
+            var builder = new ConvertOptionsBuilder(builder1, complexOptions2);
             Assert.NotNull(builder);
             Assert.Contains(BooleanConvertOptions.Default, builder);
             Assert.Contains(EnumConvertOptions.Default, builder);
@@ -82,7 +76,7 @@ namespace Ockham.Data.Tests
         [Fact]
         public void Options()
         {
-            var builder = new ConvertOptionsBuilder();
+            var builder = ConvertOptionsBuilder.Empty;
 
             var options = builder
                 .WithOptions(BooleanConvertOptions.Default)
@@ -99,7 +93,7 @@ namespace Ockham.Data.Tests
         public void WithOptions()
         {
             var complexOptions = new ComplexNumberConvertOptions(ComplexNumberElement.Real);
-            var builder = new ConvertOptionsBuilder();
+            var builder = ConvertOptionsBuilder.Empty;
             var newBuilder = builder.WithOptions(complexOptions);
 
             // Returns new instance
@@ -268,6 +262,94 @@ namespace Ockham.Data.Tests
             Assert.Equal(ValueTypeConvertFlags.NullToValueDefault, newValOptions.ConvertFlags);
         }
 
+        [Fact]
+        public void WithConverter()
+        {
+            var timestamp = DateTime.UtcNow;
+            int count = 0;
+            var fn = (ConverterDelegate<DateTime>)((value, Options) => { count++; return timestamp; });
+
+            var builder = ConvertOptionsBuilder.Default;
+            var newBuilder = builder.WithConverter(fn);
+
+            // Returns new instance
+            Assert.NotSame(builder, newBuilder);
+
+            // New converter set  
+            Assert.True(newBuilder.Converters.ContainsKey(typeof(DateTime)));
+
+            // And it appears to be the converter added above
+            var result = newBuilder.Converters[typeof(DateTime)]("foo", null);
+            Assert.IsType<DateTime>(result);
+            Assert.Equal(timestamp, (DateTime)result);
+            Assert.Equal(1, count);
+        }
+
+        [Fact]
+        public void WithoutConverter()
+        {
+            var builder = ConvertOptionsBuilder.Default
+                .WithConverter<bool>((val, opts) => true)
+            ;
+
+            Assert.True(builder.Converters.ContainsKey(typeof(bool)));
+
+            var newBuilder = builder.WithoutConverter<bool>();
+
+            // Returns new instance
+            Assert.NotSame(builder, newBuilder);
+
+            // Bool converter removed
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(bool)));
+        }
+
+        [Fact]
+        public void WithoutConverters()
+        {
+            var builder = ConvertOptionsBuilder.Default
+                .WithConverter<bool>((val, opts) => true)
+                .WithConverter<int>((val, opts) => 42)
+                .WithConverter<sbyte>((val, opts) => -42);
+
+            Assert.True(builder.Converters.ContainsKey(typeof(bool)));
+            Assert.True(builder.Converters.ContainsKey(typeof(int)));
+            Assert.True(builder.Converters.ContainsKey(typeof(sbyte)));
+
+            var newBuilder = builder.WithoutConverters(typeof(int), typeof(sbyte));
+
+            // Returns new instance
+            Assert.NotSame(builder, newBuilder);
+
+            // Bool converter still present
+            Assert.True(newBuilder.Converters.ContainsKey(typeof(bool)));
+
+            // Others removed
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(int)));
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(sbyte)));
+        }
+
+        [Fact]
+        public void WithoutConvertersAll()
+        {
+            var builder = ConvertOptionsBuilder.Default
+                .WithConverter<bool>((val, opts) => true)
+                .WithConverter<int>((val, opts) => 42)
+                .WithConverter<sbyte>((val, opts) => -42);
+
+            Assert.True(builder.Converters.ContainsKey(typeof(bool)));
+            Assert.True(builder.Converters.ContainsKey(typeof(int)));
+            Assert.True(builder.Converters.ContainsKey(typeof(sbyte)));
+
+            var newBuilder = builder.WithoutConverters();
+
+            // Returns new instance
+            Assert.NotSame(builder, newBuilder);
+
+            // All removed
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(bool))); 
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(int)));
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(sbyte)));
+        }
 
         [Fact]
         public void FromConvertOptions()
@@ -279,7 +361,7 @@ namespace Ockham.Data.Tests
             var enumOpts = new EnumConvertOptions(UndefinedValueOption.Throw, UndefinedValueOption.Throw);
             var numberOpts = new NumberConvertOptions(ParseNumericStringFlags.None);
 
-            var opts = new ConvertOptions(stringOpts, valOpts, complexOpts, boolOpts, enumOpts, numberOpts);
+            var opts = new ConvertOptions(new OptionSet[] { stringOpts, valOpts, complexOpts, boolOpts, enumOpts, numberOpts });
 
             var builder = ConvertOptionsBuilder.FromConvertOptions(opts);
 

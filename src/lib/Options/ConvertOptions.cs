@@ -10,15 +10,9 @@ namespace Ockham.Data
     /// Options for controlling data type conversions executed by Ockham.Data.Convert
     /// This class is immutable. <see cref="ConvertOptionsBuilder"/> may be used to configure an options instance
     /// </summary>
-    public class ConvertOptions
+    public partial class ConvertOptions
     {
-        private static readonly Lazy<ConvertOptions> _default = new Lazy<ConvertOptions>(() => new ConvertOptions(
-            BooleanConvertOptions.Default,
-            EnumConvertOptions.Default,
-            NumberConvertOptions.Default,
-            StringConvertOptions.Default,
-            ValueTypeConvertOptions.Default
-        ));
+        private static readonly Lazy<ConvertOptions> _default = new Lazy<ConvertOptions>(() => ConvertOptionsBuilder.Default.Options);
 
         /// <summary>
         /// Default <see cref="ConvertOptions"/> with settings that match Base Class Library behavior for
@@ -31,39 +25,24 @@ namespace Ockham.Data
         /// <see cref="StringConvertOptions.Default"/>
         /// <see cref="ValueTypeConvertOptions.Default"/>
         public static ConvertOptions Default => _default.Value;
-
+         
         /// <summary>
-        /// Create a new <see cref="ConvertOptions"/>
+        /// A dictionary of <see cref="Type"/> to custom converter functions with convert to that type
         /// </summary>
-        /// <param name="booleanOptions">Settings for converting to boolean values</param>
-        /// <param name="enumOptions">Settings for converting to enums</param>
-        /// <param name="numberOptions">Settings for converting to numbers</param>
-        /// <param name="stringOptions">Settings for how to process strings during conversions</param>
-        /// <param name="valueTypeOptions">Settings for processing value types</param>
-        /// <param name="otherOptions">Any other user-defined <see cref="OptionSet"/>s to store in the <see cref="ConvertOptions"/></param>
-        public ConvertOptions(
-            BooleanConvertOptions booleanOptions,
-            EnumConvertOptions enumOptions,
-            NumberConvertOptions numberOptions,
-            StringConvertOptions stringOptions,
-            ValueTypeConvertOptions valueTypeOptions,
-            params OptionSet[] otherOptions
-        ) : this((new OptionSet[] { booleanOptions, enumOptions, numberOptions, stringOptions, valueTypeOptions }).Concat(otherOptions)) { }
-
-        /// <summary>
-        /// Create a new <see cref="ConvertOptions"/> with all of the provided <see cref="OptionSet"/>s.
-        /// <paramref name="options"/> must contain a <see cref="BooleanConvertOptions"/>, 
-        /// <see cref="EnumConvertOptions"/>, <see cref="NumberConvertOptions"/>, <see cref="StringConvertOptions"/>,
-        /// and <see cref="ValueTypeConvertOptions"/>
-        /// </summary>
-        public ConvertOptions(params OptionSet[] options) : this((IEnumerable<OptionSet>)options) { }
+        public IReadOnlyDictionary<Type, ConverterDelegate> Converters { get; }
 
         /// <summary>
         /// Create a new <see cref="ConvertOptions"/> with all of the provided <see cref="OptionSet"/>s
         /// </summary>
-        public ConvertOptions(IEnumerable<OptionSet> options)
+        public ConvertOptions(IEnumerable<OptionSet> options) : this(options, null) { }
+
+        /// <summary>
+        /// Create a new <see cref="ConvertOptions"/> with all of the provided <see cref="OptionSet"/>s
+        /// </summary>
+        public ConvertOptions(IEnumerable<OptionSet> options, IReadOnlyDictionary<Type, ConverterDelegate> converters)
         {
             _optionSets = options.ToImmutableDictionary(o => o.GetType());
+            this.Converters = (converters ?? ImmutableDictionary<Type, ConverterDelegate>.Empty).ToImmutableDictionary();
 
             // Memoize known option sets
             this.Booleans = this.GetOptions<BooleanConvertOptions>() ?? throw new ArgumentNullException("booleanOptions");
@@ -73,8 +52,12 @@ namespace Ockham.Data
             this.ValueTypes = this.GetOptions<ValueTypeConvertOptions>() ?? throw new ArgumentNullException("valueTypeOptions");
 
             this.FlattenedOptions = FlattenOptions(this);
+            this.HasCustomConverters = this.Converters.Any();
             this.WhitespaceToNull = this.Strings.WhitespaceAsNull;
             this.StringToNull = this.WhitespaceToNull || this.Strings.EmptyStringAsNull;
+            this.NullToValueDefault = this.ValueTypes.NullToValueDefault;
+            this.ParseBaseN = this.Numbers.ParseHex | this.Numbers.ParseOctal | this.Numbers.ParseBinary;
+            this.ParseFlage = this.Numbers.ParseFlags;
         }
 
         /// <summary>
@@ -140,8 +123,12 @@ namespace Ockham.Data
         // Memoized internal flags for performance
         internal FlattenedOptions FlattenedOptions { get; }
 
+        internal bool HasCustomConverters { get; }
         internal bool StringToNull { get; }
         internal bool WhitespaceToNull { get; }
+        internal bool NullToValueDefault { get; }
+        internal bool ParseBaseN { get; } 
+        internal ParseNumericStringFlags ParseFlage { get; }
 
         private static FlattenedOptions FlattenOptions(ConvertOptions options)
         {

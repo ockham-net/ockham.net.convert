@@ -13,13 +13,13 @@ namespace Ockham.Data
     {
 
         private static readonly Lazy<ConvertOptionsBuilder> _default = new Lazy<ConvertOptionsBuilder>(() =>
-            new ConvertOptionsBuilder(new OptionSet[] {
+            ConvertOptionsBuilder.Empty.WithOptions(
                 BooleanConvertOptions.Default,
                 EnumConvertOptions.Default,
                 NumberConvertOptions.Default,
                 StringConvertOptions.Default,
                 ValueTypeConvertOptions.Default
-            })
+            )
         );
 
         /// <summary>
@@ -41,33 +41,45 @@ namespace Ockham.Data
         /// <summary>
         /// Intialize a <see cref="ConvertOptionsBuilder"/> with the options from an existing <see cref="ConvertOptions"/> instance
         /// </summary>
-        public static ConvertOptionsBuilder FromConvertOptions(ConvertOptions source) => new ConvertOptionsBuilder(source.AllOptions());
+        public static ConvertOptionsBuilder FromConvertOptions(ConvertOptions source) => new ConvertOptionsBuilder(source.AllOptions(), source.Converters);
 
+        private ImmutableDictionary<Type, ConverterDelegate> _converters;
+
+        /// <summary>
+        /// A dictionary of <see cref="Type"/> to custom converter functions with convert to that type
+        /// </summary>
+        public IReadOnlyDictionary<Type, ConverterDelegate> Converters => _converters;
 
         private readonly ImmutableDictionary<Type, OptionSet> _optionSets;
 
-        /// <summary>
-        /// Create a new <see cref="ConvertOptionsBuilder"/> with no options set
-        /// </summary>
-        public ConvertOptionsBuilder() : this(Enumerable.Empty<OptionSet>()) { }
+        private ConvertOptionsBuilder()
+        {
+            _optionSets = ImmutableDictionary<Type, OptionSet>.Empty;
+            _converters = ImmutableDictionary<Type, ConverterDelegate>.Empty;
+        }
 
-        /// <summary>
-        /// Create a new <see cref="ConvertOptionsBuilder"/> initialized with the provided <paramref name="options"/>
-        /// </summary>
-        public ConvertOptionsBuilder(IEnumerable<OptionSet> options) => _optionSets = options.ToImmutableDictionary(o => o.GetType());
+        internal ConvertOptionsBuilder(ConvertOptionsBuilder other, params OptionSet[] newOptions)
+        {
+            _optionSets = newOptions.Aggregate(other._optionSets, (dict, option) => dict.SetItem(option.GetType(), option));
+            _converters = other._converters;
+        }
 
-        /// <summary>
-        /// Create a new <see cref="ConvertOptionsBuilder"/> initialized with the provided <paramref name="options"/>
-        /// and <paramref name="newOptions"/>. <paramref name="newOptions"/> will replace any existing options in <paramref name="options"/>
-        /// of the same type
-        /// </summary>
-        public ConvertOptionsBuilder(IEnumerable<OptionSet> options, OptionSet newOptions)
-            => _optionSets = options.ToImmutableDictionary(o => o.GetType()).SetItem(newOptions.GetType(), newOptions);
+        internal ConvertOptionsBuilder(ConvertOptionsBuilder other, Type targetType, ConverterDelegate converter)
+        {
+            _optionSets = other._optionSets;
+            _converters = other._converters.SetItem(targetType, converter);
+        }
+
+        internal ConvertOptionsBuilder(IEnumerable<OptionSet> options, IReadOnlyDictionary<Type, ConverterDelegate> converters)
+        {
+            _optionSets = (options ?? Enumerable.Empty<OptionSet>()).ToImmutableDictionary(o => o.GetType());
+            _converters = (converters ?? ImmutableDictionary<Type, ConverterDelegate>.Empty).ToImmutableDictionary();
+        }
 
         /// <summary>
         /// Get an <see cref="ConvertOptions"/> instance will the options from the current builder
         /// </summary>
-        public ConvertOptions Options => new ConvertOptions(this);
+        public ConvertOptions Options => new ConvertOptions(this._optionSets.Values, this._converters);
 
         /// <summary>
         /// Retrieve a specific set of options by type
@@ -160,12 +172,40 @@ namespace Ockham.Data
             => new ConvertOptionsBuilder(this, new ValueTypeConvertOptions(convertFlags));
 
         /// <summary>
-        /// Add or replace an <see cref="OptionSet"/> on this <see cref="ConvertOptionsBuilder"/>
+        /// Add or replace one or more <see cref="OptionSet"/>s on this <see cref="ConvertOptionsBuilder"/>
         /// </summary>
-        /// <param name="options">Any <see cref="OptionSet"/></param>
+        /// <param name="options">One or more <see cref="OptionSet"/>s</param>
         /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
-        public ConvertOptionsBuilder WithOptions(OptionSet options)
+        public ConvertOptionsBuilder WithOptions(params OptionSet[] options)
             => new ConvertOptionsBuilder(this, options);
+         
+        /// <summary>
+        /// Add a custom converter to this <see cref="ConvertOptionsBuilder"/>
+        /// </summary>
+        /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        public ConvertOptionsBuilder WithConverter<T>(ConverterDelegate<T> @delegate)
+            => new ConvertOptionsBuilder(this, typeof(T), (value, options) => @delegate(value, options));
+         
+        /// <summary>
+        /// Remove any custom converters for type <typeparamref name="T"/>
+        /// </summary>
+        /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        public ConvertOptionsBuilder WithoutConverter<T>()
+            => new ConvertOptionsBuilder(this._optionSets.Values, this._converters.Remove(typeof(T)));
+
+        /// <summary>
+        /// Remove all custom converters
+        /// </summary>
+        /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        public ConvertOptionsBuilder WithoutConverters()
+            => new ConvertOptionsBuilder(this._optionSets.Values, null);
+
+        /// <summary>
+        /// Remove any custom converters for the specified target types
+        /// </summary>
+        /// <returns>A new <see cref="ConvertOptionsBuilder"/> with updated settings</returns>
+        public ConvertOptionsBuilder WithoutConverters(params Type[] types)
+            => new ConvertOptionsBuilder(this._optionSets.Values, types.Aggregate(this._converters, (dict, type) => dict.Remove(type)));
 
         /// <summary>
         /// Enumerate the <see cref="OptionSet"/>s in this <see cref="ConvertOptionsBuilder"/>

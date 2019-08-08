@@ -20,6 +20,9 @@ namespace Ockham.Data
                 StringConvertOptions.Default,
                 ValueTypeConvertOptions.Default
             )
+                .WithConverter(BoolConverter.ToBool)
+                .WithConverter(GuidConverter.ToGuid)
+                .WithConverter(TimeSpanConverter.ToTimeSpan)
         );
 
         /// <summary>

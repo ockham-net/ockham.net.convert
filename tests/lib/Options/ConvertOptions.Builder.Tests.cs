@@ -1,4 +1,5 @@
 ﻿using Ockham.Data.Tests.Fixtures;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
@@ -261,6 +262,94 @@ namespace Ockham.Data.Tests
             Assert.Equal(ValueTypeConvertFlags.NullToValueDefault, newValOptions.ConvertFlags);
         }
 
+        [Fact]
+        public void WithConverter()
+        {
+            var timestamp = DateTime.UtcNow;
+            int count = 0;
+            var fn = (ConverterDelegate<DateTime>)((value, Options) => { count++; return timestamp; });
+
+            var builder = ConvertOptionsBuilder.Default;
+            var newBuilder = builder.WithConverter(fn);
+
+            // Returns new instance
+            Assert.NotSame(builder, newBuilder);
+
+            // New converter set  
+            Assert.True(newBuilder.Converters.ContainsKey(typeof(DateTime)));
+
+            // And it appears to be the converter added above
+            var result = newBuilder.Converters[typeof(DateTime)]("foo", null);
+            Assert.IsType<DateTime>(result);
+            Assert.Equal(timestamp, (DateTime)result);
+            Assert.Equal(1, count);
+        }
+
+        [Fact]
+        public void WithoutConverter()
+        {
+            var builder = ConvertOptionsBuilder.Default
+                .WithConverter<bool>((val, opts) => true)
+            ;
+
+            Assert.True(builder.Converters.ContainsKey(typeof(bool)));
+
+            var newBuilder = builder.WithoutConverter<bool>();
+
+            // Returns new instance
+            Assert.NotSame(builder, newBuilder);
+
+            // Bool converter removed
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(bool)));
+        }
+
+        [Fact]
+        public void WithoutConverters()
+        {
+            var builder = ConvertOptionsBuilder.Default
+                .WithConverter<bool>((val, opts) => true)
+                .WithConverter<int>((val, opts) => 42)
+                .WithConverter<sbyte>((val, opts) => -42);
+
+            Assert.True(builder.Converters.ContainsKey(typeof(bool)));
+            Assert.True(builder.Converters.ContainsKey(typeof(int)));
+            Assert.True(builder.Converters.ContainsKey(typeof(sbyte)));
+
+            var newBuilder = builder.WithoutConverters(typeof(int), typeof(sbyte));
+
+            // Returns new instance
+            Assert.NotSame(builder, newBuilder);
+
+            // Bool converter still present
+            Assert.True(newBuilder.Converters.ContainsKey(typeof(bool)));
+
+            // Others removed
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(int)));
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(sbyte)));
+        }
+
+        [Fact]
+        public void WithoutConvertersAll()
+        {
+            var builder = ConvertOptionsBuilder.Default
+                .WithConverter<bool>((val, opts) => true)
+                .WithConverter<int>((val, opts) => 42)
+                .WithConverter<sbyte>((val, opts) => -42);
+
+            Assert.True(builder.Converters.ContainsKey(typeof(bool)));
+            Assert.True(builder.Converters.ContainsKey(typeof(int)));
+            Assert.True(builder.Converters.ContainsKey(typeof(sbyte)));
+
+            var newBuilder = builder.WithoutConverters();
+
+            // Returns new instance
+            Assert.NotSame(builder, newBuilder);
+
+            // All removed
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(bool))); 
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(int)));
+            Assert.False(newBuilder.Converters.ContainsKey(typeof(sbyte)));
+        }
 
         [Fact]
         public void FromConvertOptions()

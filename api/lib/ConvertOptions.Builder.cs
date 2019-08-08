@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Ockham.Data
 {
     public class ConvertOptionsBuilder : IEnumerable<OptionSet>
     {
-        // Intialize with empty options
+        // Initialize with empty options
         public static ConvertOptionsBuilder Empty => throw null;
 
         // Initialize with default options
@@ -13,10 +14,6 @@ namespace Ockham.Data
 
         // Initialize from existing ConvertOptions
         public static ConvertOptionsBuilder FromConvertOptions(ConvertOptions source) => throw null;
-
-        public ConvertOptionsBuilder() => throw null;
-        public ConvertOptionsBuilder(IEnumerable<OptionSet> options) => throw null;
-        public ConvertOptionsBuilder(IEnumerable<OptionSet> options, OptionSet newOptions) => throw null;
 
         public ConvertOptions Options { get; }
 
@@ -29,10 +26,20 @@ namespace Ockham.Data
         public ConvertOptionsBuilder WithNumberOptions(ParseNumericStringFlags parseFlags) => throw null;
         public ConvertOptionsBuilder WithStringOptions(StringAsNullOption asNullOption, TrimStringFlags trimFlags) => throw null;
         public ConvertOptionsBuilder WithValueTypeOptions(ValueTypeConvertFlags convertFlags) => throw null;
-        public ConvertOptionsBuilder WithOptions(OptionSet options) => throw null;
+        public ConvertOptionsBuilder WithOptions(params OptionSet[] options) => throw null;
 
+        public ConvertOptionsBuilder WithConverter<T>(ConverterDelegate<T> @delegate) => throw null;
+        public ConvertOptionsBuilder WithConverter(Type targetType, ConverterDelegate @delegate) => throw null;
+        public ConvertOptionsBuilder WithoutConverters() => throw null;                     // Remove all custom conveters
+        public ConvertOptionsBuilder WithoutConverters(params Type[] types) => throw null;  // Remove custom conveters of specific types
+        public ConvertOptionsBuilder WithoutConverter<T>() => throw null;                   // Remove custom converter of type T
+
+        public IReadOnlyDictionary<Type, ConverterDelegate> Converters { get; }
         public IEnumerator<OptionSet> GetEnumerator() => throw null;
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        // Constructor is private. Use ConvertOptionsBuilder.Empty
+        private ConvertOptionsBuilder() => throw null;
     }
 
 }

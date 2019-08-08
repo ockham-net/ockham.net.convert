@@ -29,7 +29,6 @@ namespace Ockham.Data
         public ConvertOptionsBuilder WithOptions(params OptionSet[] options) => throw null;
 
         public ConvertOptionsBuilder WithConverter<T>(ConverterDelegate<T> @delegate) => throw null;
-        public ConvertOptionsBuilder WithConverter(Type targetType, ConverterDelegate @delegate) => throw null;
         public ConvertOptionsBuilder WithoutConverters() => throw null;                     // Remove all custom conveters
         public ConvertOptionsBuilder WithoutConverters(params Type[] types) => throw null;  // Remove custom conveters of specific types
         public ConvertOptionsBuilder WithoutConverter<T>() => throw null;                   // Remove custom converter of type T

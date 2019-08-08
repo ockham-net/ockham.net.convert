@@ -34,7 +34,19 @@ namespace Ockham.Data
         /// <param name="value"></param> 
         /// <param name="parseFlags"></param>  
         public static bool IsNumeric(object value, ParseNumericStringFlags parseFlags)
+            => IsNumeric(value, parseFlags, out _);
+
+        /// <summary>
+        /// Test if the input value is a non-null numeric type 
+        /// or a string that can be parsed as a number, with detection
+        /// of hex strings controlled by <paramref name="parseFlags"/>
+        /// </summary>
+        /// <param name="value"></param> 
+        /// <param name="parseFlags"></param>  
+        /// <param name="base">The radix (base) of the number</param>
+        internal static bool IsNumeric(object value, ParseNumericStringFlags parseFlags, out int @base)
         {
+            @base = 10;
             if (null == value) return false;
             if (value is string sValue)
             {
@@ -55,17 +67,29 @@ namespace Ockham.Data
 
                 if ((parseFlags & ParseNumericStringFlags.HexString) != 0)
                 {
-                    if (Regex.IsMatch(sValue, @"^\s*0[xX][0-9a-fA-F]+$")) return true;
+                    if (Regex.IsMatch(sValue, @"^\s*0[xX][0-9a-fA-F]+$"))
+                    {
+                        @base = 16;
+                        return true;
+                    }
                 }
 
                 if ((parseFlags & ParseNumericStringFlags.OctalString) != 0)
                 {
-                    if (Regex.IsMatch(sValue, @"^\s*0[oO][0-7]+$")) return true;
+                    if (Regex.IsMatch(sValue, @"^\s*0[oO][0-7]+$"))
+                    {
+                        @base = 8;
+                        return true;
+                    }
                 }
 
                 if ((parseFlags & ParseNumericStringFlags.BinaryString) != 0)
                 {
-                    if (Regex.IsMatch(sValue, @"^\s*0[bB][01]+$")) return true;
+                    if (Regex.IsMatch(sValue, @"^\s*0[bB][01]+$"))
+                    {
+                        @base = 2;
+                        return true;
+                    }
                 }
 
                 return false;

@@ -8,45 +8,6 @@ namespace Ockham.Data.Tests
     public class ConvertOptionsTests
     {
         [Fact]
-        public void Ctor_Definite()
-        {
-            var opts = new ConvertOptions(
-                new BooleanConvertOptions(new[] { bool.TrueString }, new[] { bool.FalseString }),
-                new EnumConvertOptions(UndefinedValueOption.Throw, UndefinedValueOption.Throw),
-                new NumberConvertOptions(ParseNumericStringFlags.None),
-                new StringConvertOptions(StringAsNullOption.NullReference, TrimStringFlags.None),
-                new ValueTypeConvertOptions(ValueTypeConvertFlags.None)
-            );
-
-            Assert.NotNull(opts);
-            Assert.NotNull(opts.Booleans);
-            Assert.NotNull(opts.Enums);
-            Assert.NotNull(opts.Numbers);
-            Assert.NotNull(opts.Strings);
-            Assert.NotNull(opts.ValueTypes);
-        }
-
-        [Fact]
-        public void Ctor_Params()
-        {
-            var opts = new ConvertOptions(
-                new StringConvertOptions(StringAsNullOption.NullReference, TrimStringFlags.None),
-                new ValueTypeConvertOptions(ValueTypeConvertFlags.None),
-                new ComplexNumberConvertOptions(ComplexNumberElement.Real),
-                new BooleanConvertOptions(new[] { bool.TrueString }, new[] { bool.FalseString }),
-                new EnumConvertOptions(UndefinedValueOption.Throw, UndefinedValueOption.Throw),
-                new NumberConvertOptions(ParseNumericStringFlags.None)
-            );
-
-            Assert.NotNull(opts);
-            Assert.NotNull(opts.Booleans);
-            Assert.NotNull(opts.Enums);
-            Assert.NotNull(opts.Numbers);
-            Assert.NotNull(opts.Strings);
-            Assert.NotNull(opts.ValueTypes);
-        }
-
-        [Fact]
         public void Ctor_Enumerable()
         {
             var opts = new ConvertOptions(new OptionSet[] {

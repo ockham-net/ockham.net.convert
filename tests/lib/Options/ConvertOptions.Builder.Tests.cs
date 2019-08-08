@@ -9,14 +9,6 @@ namespace Ockham.Data.Tests
     public class ConvertOptionsBuilderTests
     {
         [Fact]
-        public void Ctor_Empty()
-        {
-            var builder = new ConvertOptionsBuilder();
-            Assert.NotNull(builder);
-            Assert.Empty(builder);
-        }
-
-        [Fact]
         public void Ctor_Enumerable()
         {
             var complexOptions = new ComplexNumberConvertOptions(ComplexNumberElement.Real);
@@ -27,7 +19,7 @@ namespace Ockham.Data.Tests
                 complexOptions
             };
 
-            var builder = new ConvertOptionsBuilder(options);
+            var builder = new ConvertOptionsBuilder(options, null);
             Assert.NotNull(builder);
             Assert.Contains(BooleanConvertOptions.Default, builder);
             Assert.Contains(EnumConvertOptions.Default, builder);
@@ -36,7 +28,7 @@ namespace Ockham.Data.Tests
         }
 
         [Fact]
-        public void Ctor_Enumerable_Replace()
+        public void Ctor_ReplaceOptions()
         {
             // Second ComplexNumberConvertOptions should replace the first
             var complexOptions1 = new ComplexNumberConvertOptions(ComplexNumberElement.Real);
@@ -48,7 +40,8 @@ namespace Ockham.Data.Tests
                 complexOptions1
             };
 
-            var builder = new ConvertOptionsBuilder(options, complexOptions2);
+            var builder1 = new ConvertOptionsBuilder(options, null);
+            var builder = new ConvertOptionsBuilder(builder1, complexOptions2);
             Assert.NotNull(builder);
             Assert.Contains(BooleanConvertOptions.Default, builder);
             Assert.Contains(EnumConvertOptions.Default, builder);
@@ -82,7 +75,7 @@ namespace Ockham.Data.Tests
         [Fact]
         public void Options()
         {
-            var builder = new ConvertOptionsBuilder();
+            var builder = ConvertOptionsBuilder.Empty;
 
             var options = builder
                 .WithOptions(BooleanConvertOptions.Default)
@@ -99,7 +92,7 @@ namespace Ockham.Data.Tests
         public void WithOptions()
         {
             var complexOptions = new ComplexNumberConvertOptions(ComplexNumberElement.Real);
-            var builder = new ConvertOptionsBuilder();
+            var builder = ConvertOptionsBuilder.Empty;
             var newBuilder = builder.WithOptions(complexOptions);
 
             // Returns new instance
@@ -279,7 +272,7 @@ namespace Ockham.Data.Tests
             var enumOpts = new EnumConvertOptions(UndefinedValueOption.Throw, UndefinedValueOption.Throw);
             var numberOpts = new NumberConvertOptions(ParseNumericStringFlags.None);
 
-            var opts = new ConvertOptions(stringOpts, valOpts, complexOpts, boolOpts, enumOpts, numberOpts);
+            var opts = new ConvertOptions(new OptionSet[] { stringOpts, valOpts, complexOpts, boolOpts, enumOpts, numberOpts });
 
             var builder = ConvertOptionsBuilder.FromConvertOptions(opts);
 

@@ -8,9 +8,8 @@ namespace Ockham.Data.Tests
 {
     using static ConvertTestRunner;
 
-    public partial class StringAsNullTests
+    public partial class ConvertErrorTests
     {
-
         public static IEnumerable<object[]> ErrorData = Sets(
             Set(null, "null", typeof(int), "int"),
             Set(DBNull.Value, "DBNull", typeof(int), "int"),

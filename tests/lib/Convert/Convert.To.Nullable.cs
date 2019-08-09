@@ -1,15 +1,10 @@
 ﻿using Ockham.Data.Tests.Fixtures;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    using static Factories;
-
-    public partial class ConvertToNullableTests
+    public class ConvertToNullableTests
     {
         [Fact]
         public static void NullToNull()
@@ -29,7 +24,6 @@ namespace Ockham.Data.Tests
         {
             ConvertAssert.ConvertsToNull<int?>("  \r  \t ", OptionsVariant.WhitespaceAsNull);
         }
-
 
         [Theory]
         [MemberData(nameof(ConvertToNumberTests.Decimal42s_Strict), MemberType = typeof(ConvertToNumberTests))]

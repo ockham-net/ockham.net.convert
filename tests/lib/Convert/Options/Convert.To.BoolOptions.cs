@@ -3,11 +3,9 @@ using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    using static ConvertTestRunner;
     using static Factories;
 
-    // Test that ConvertOptions.Booleans settings have the intended effect
-    public partial class ConvertToBoolTests
+    public class ConvertToBoolTests
     {
 
         private static readonly ConvertOptions TrueStringOptions

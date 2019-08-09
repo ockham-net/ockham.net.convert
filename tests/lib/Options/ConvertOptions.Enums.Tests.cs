@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    [ExcludeFromCodeCoverage]
     public class EnumConvertOptionsTests
     {
         [Fact]

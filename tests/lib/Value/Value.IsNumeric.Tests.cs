@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    [ExcludeFromCodeCoverage]
     public partial class ValueTests
     {
         public static string[] _NumericStrings = {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ockham.Data.Tests.Fixtures
+﻿namespace Ockham.Data.Tests.Fixtures
 {
     public class CelestialBody { }
     public class Star : CelestialBody { }

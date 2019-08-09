@@ -4,14 +4,14 @@ using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    public partial class StringAsNullTests
+    public class StringAsNullTests
     {
         [Fact]
         public void NullToNull()
         {
             foreach (var options in new[] { ConvertOptions.Default, OptionsVariant.EmptyStringAsNull, OptionsVariant.WhitespaceAsNull })
             {
-                ConvertAssert.ConvertsToNull<CelestialBody>(null, options); 
+                ConvertAssert.ConvertsToNull<CelestialBody>(null, options);
             }
         }
 
@@ -20,7 +20,7 @@ namespace Ockham.Data.Tests
         {
             foreach (var options in new[] { ConvertOptions.Default, OptionsVariant.EmptyStringAsNull, OptionsVariant.WhitespaceAsNull })
             {
-                ConvertAssert.ConvertsToNull<CelestialBody>(DBNull.Value, options); 
+                ConvertAssert.ConvertsToNull<CelestialBody>(DBNull.Value, options);
             }
         }
 
@@ -32,13 +32,13 @@ namespace Ockham.Data.Tests
             foreach (var options in new[] { ConvertOptions.Default, OptionsVariant.EmptyStringAsNull, OptionsVariant.WhitespaceAsNull })
             {
                 // Force always converts to null
-                ConvertAssert.ForcesToNull<CelestialBody>(input, options); 
+                ConvertAssert.ForcesToNull<CelestialBody>(input, options);
             }
 
             foreach (var options in new[] { ConvertOptions.Default })
             {
                 // To fails because empty string is not considered null
-                ConvertAssert.ConvertFails<CelestialBody>(input, options); 
+                ConvertAssert.ConvertFails<CelestialBody>(input, options);
             }
 
             foreach (var options in new[] { OptionsVariant.EmptyStringAsNull, OptionsVariant.WhitespaceAsNull })

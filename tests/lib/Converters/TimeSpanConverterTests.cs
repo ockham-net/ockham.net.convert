@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Ockham.Data.Tests.Fixtures;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
-using Ockham.Data.Tests.Fixtures;
-
-using static Ockham.Data.Tests.Factories;
 
 namespace Ockham.Data.Tests
 {
-    [ExcludeFromCodeCoverage]
+    using static Factories;
+
     public class TimeSpanConverterTests
     {
         public static IEnumerable<object[]> Unconvertible => (new object[]
@@ -21,13 +19,37 @@ namespace Ockham.Data.Tests
 
         public static IEnumerable<object[]> ComplexStrings => new[]
         {
-            Pair("0:02.231", new TimeSpan(0, 0, 0, 2, 231)),
-            Pair("5:14", new TimeSpan(0, 0, 5, 14, 0)),
-            Pair("5:14.129", new TimeSpan(0, 0, 5, 14, 129)),
-            Pair("01:00.010", new TimeSpan(0, 0, 1, 0, 10)),
-            Pair("3:12:00.000", new TimeSpan(0, 3, 12, 0, 0)),
-            Pair("231.3:12:00.000", new TimeSpan(231, 3, 12, 0, 0))
+            Set("0:02.231", new TimeSpan(0, 0, 0, 2, 231)),
+            Set("5:14", new TimeSpan(0, 0, 5, 14, 0)),
+            Set("5:14.129", new TimeSpan(0, 0, 5, 14, 129)),
+            Set("01:00.010", new TimeSpan(0, 0, 1, 0, 10)),
+            Set("3:12:00.000", new TimeSpan(0, 3, 12, 0, 0)),
+            Set("231.3:12:00.000", new TimeSpan(231, 3, 12, 0, 0))
         };
+
+        public static IEnumerable<object[]> DecimalStrings => Values(
+            "3423.2423",
+            "432.3432",
+            "0.006565",
+            "3.209213",
+            "001.0"
+        );
+
+        public static IEnumerable<object[]> WholeNumeric => Values(
+            0,
+            0m,
+            0.0f,
+            0.0d,
+            0UL,
+            (byte)0,
+            (uint)0,
+            23409234234,
+            3242.00,
+            168124m,
+            "0",
+            "23",
+            "42342"
+         );
 
         public static IEnumerable<object[]> Timespans => ComplexStrings.Select(arr => arr[1]).AsObjectArray();
 
@@ -39,7 +61,7 @@ namespace Ockham.Data.Tests
         }
 
         [Theory]
-        [MemberData(nameof(TestPrimitives.DecimalStrings), MemberType = typeof(TestPrimitives))]
+        [MemberData(nameof(DecimalStrings))]
         public void DecimalSecondsToTimespan(object input)
         {
             double dblVal = Convert.To<double>(input);
@@ -54,7 +76,7 @@ namespace Ockham.Data.Tests
         }
 
         [Theory]
-        [MemberData(nameof(TestPrimitives.WholeNumeric), MemberType = typeof(TestPrimitives))]
+        [MemberData(nameof(WholeNumeric))]
         public void TicksToTimespan(object input)
         {
             long lngVal = Convert.To<long>(input);

@@ -1,8 +1,5 @@
 ﻿using Ockham.Data.Tests.Fixtures;
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using Xunit;
 
 using static Ockham.Data.Tests.Factories;
@@ -11,14 +8,14 @@ namespace Ockham.Data.Tests
 {
     using static ConvertTestRunner;
 
-    public partial class StringAsNullTests
+    public class ConvertToReferenceTests
     {
         public static IEnumerable<object[]> StarData = Values("hi", 2, new object());
 
         public static IEnumerable<object[]> StringData = Sets(
-            Pair(123, "123"),
-            Pair(3.3333m, "3.3333"),
-            Pair(new NeutronStar(), "I'm a neutron star")
+            Set(123, "123"),
+            Set(3.3333m, "3.3333"),
+            Set(new NeutronStar(), "I'm a neutron star")
         );
 
         // Custom converter is invoked

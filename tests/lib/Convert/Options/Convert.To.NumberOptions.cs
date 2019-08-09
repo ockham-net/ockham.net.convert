@@ -13,7 +13,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.AllowDigitSeparator).Options;
 
-            ConvertAssert.Converts(value, 42, options); 
+            ConvertAssert.Converts(value, 42, options);
         }
 
         [Theory]
@@ -24,7 +24,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.HexString).Options;
 
-            ConvertAssert.Converts(value, 42, options); 
+            ConvertAssert.Converts(value, 42, options);
         }
 
         [Theory]
@@ -36,7 +36,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.HexString | ParseNumericStringFlags.AllowDigitSeparator).Options;
 
-            ConvertAssert.Converts(value, 42, options); 
+            ConvertAssert.Converts(value, 42, options);
         }
 
 
@@ -48,7 +48,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.OctalString).Options;
 
-            ConvertAssert.Converts(value, 42, options); 
+            ConvertAssert.Converts(value, 42, options);
         }
 
         [Theory]
@@ -60,7 +60,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.OctalString | ParseNumericStringFlags.AllowDigitSeparator).Options;
 
-            ConvertAssert.Converts(value, 42, options); 
+            ConvertAssert.Converts(value, 42, options);
         }
 
         [Theory]

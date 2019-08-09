@@ -1,9 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Xunit;
+﻿using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    [ExcludeFromCodeCoverage]
     public class ValueTypeConvertOptionsTests
     {
         [Fact]

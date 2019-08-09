@@ -37,20 +37,7 @@ namespace Ockham.Data.Tests
         /// </summary> 
         public static void TestOverloads<T>(object input, ConvertOptions options, TestOptionsCallback test)
             => TestOverloads<T>(AllOverloads, input, options, null, test, null);
-
-
-        /// <summary>
-        /// Test only converter methods that use custom options, converting to type <paramref name="targetType"/>
-        /// </summary> 
-        public static void TestCustomOverloads(Type targetType, object input, ConvertOptions options, ConvertTestCallback test)
-            => TestOverloads(ConvertOverload.OptionsOrInstance, targetType, input, options, test);
-
-        /// <summary>
-        /// Test only converter methods that use custom options, converting to type <paramref name="targetType"/>, filtered by <paramref name="flags"/>
-        /// </summary> 
-        public static void TestCustomOverloads(ConvertOverload flags, Type targetType, object input, ConvertOptions options, ConvertTestCallback test)
-            => TestOverloads(flags | ConvertOverload.OptionsOrInstance, targetType, input, options, test);
-
+          
         /// <summary>
         /// Test all converter methods, converting to type <paramref name="targetType"/>, filtered by <paramref name="flags"/>
         /// </summary> 
@@ -80,10 +67,7 @@ namespace Ockham.Data.Tests
         /// </summary> 
         public static void TestOverloads<T>(ConvertOverload filter, object input, ConvertOptions options, ConvertTestCallback test)
             => TestOverloads<T>(GetOverloads(filter), input, options, test, null, null);
-
-        //public static void TestOverloads<T>(ConvertOverload filter, object input, ConvertOptions options, TestOptionsCallback test)
-        //    => TestOverloads<T>(GetOverloads(filter), input, options, null, test);
-
+         
         private static void TestOverloads<T>(IEnumerable<ConvertOverload> overloads, object input, ConvertOptions options, ConvertTestCallback test, TestOptionsCallback optionsTest, object defaultValue)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));

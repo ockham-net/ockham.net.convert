@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Ockham.Data.Tests.Fixtures
 {
-    [ExcludeFromCodeCoverage]
     public class ComplexNumberConvertOptions : OptionSet
     {
         public ComplexNumberConvertOptions(ComplexNumberElement convertToFlags)
@@ -30,10 +28,8 @@ namespace Ockham.Data.Tests.Fixtures
         Imaginary = 0x2
     }
 
-    [ExcludeFromCodeCoverage]
     public static class ComplexNumberConvertOptionsExtensions
     {
-
         // allows options.ComplexNumbers()
         public static ComplexNumberConvertOptions ComplexNumbers(this ConvertOptions options)
             => options.GetOptions<ComplexNumberConvertOptions>();

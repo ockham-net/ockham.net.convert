@@ -7,7 +7,7 @@ namespace Ockham.Data.Tests
     using Fixtures;
     using static Factories;
 
-    public partial class ValueTypeOptionsTests
+    public class ValueTypeOptionsTests
     {
         public static readonly IEnumerable<object[]> Defaults = Sets(
             Set(typeof(int), 0),
@@ -27,8 +27,8 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(Types))]
         public static void NullToValueThrows(Type targetType)
         {
-            ConvertAssert.ConvertFails(targetType, null, ConvertOptions.Default);
-            ConvertAssert.ConvertFails(targetType, DBNull.Value, ConvertOptions.Default);
+            ConvertAssert.ConvertFails(targetType, null);
+            ConvertAssert.ConvertFails(targetType, DBNull.Value);
         }
 
         [Theory]

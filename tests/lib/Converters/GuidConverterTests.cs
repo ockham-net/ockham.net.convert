@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    [ExcludeFromCodeCoverage]
     public class GuidConverterTests
     {
         public static Guid ExpectedGuid = new Guid("96ec026beffa42beabd539c21f5f7aeb");

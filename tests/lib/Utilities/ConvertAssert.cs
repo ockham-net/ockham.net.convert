@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using Xunit.Sdk;
 using Xunit;
 
 namespace Ockham.Data.Tests
@@ -213,16 +210,15 @@ namespace Ockham.Data.Tests
         }
 
         /// <summary>
-        /// Test the all static and instance overloads of To(..) throw an exception
+        /// Test that all static and instance overloads of To(..) throw an exception
         /// when trying to convert <paramref name="value"/> to type <paramref name="targetType"/>
-        /// when using the provided <paramref name="options"/>
         /// </summary> 
-        public static void ConvertFails(Type targetType, object value, ConvertOptions options)
+        public static void ConvertFails(Type targetType, object value)
         {
-            TestCustomOverloads(ConvertOverload.To, targetType, value, options, convert =>
-           {
-               Assert.ThrowsAny<SystemException>(() => convert());
-           });
+            TestOverloads(ConvertOverload.To, targetType, value, ConvertOptions.Default, convert =>
+            {
+                Assert.ThrowsAny<SystemException>(() => convert());
+            });
         }
 
     }

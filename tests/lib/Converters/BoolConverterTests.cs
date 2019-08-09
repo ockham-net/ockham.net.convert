@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    [ExcludeFromCodeCoverage]
     public static class BoolConverterTests
     {
         public static ConvertOptions BoolOptions

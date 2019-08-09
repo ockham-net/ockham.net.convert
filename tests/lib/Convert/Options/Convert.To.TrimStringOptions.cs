@@ -5,7 +5,7 @@ using Xunit;
 namespace Ockham.Data.Tests
 {
     // Test that ConvertOptions.Enums settings have the intended effect
-    public partial class ConvertFromStringTests
+    public class TrimStringTests
     {
         public static readonly IEnumerable<object[]> StartPadded42s = ConvertToNumberTests.String42s_Strict.Select(o => " \r " + (o[0] as string)).AsObjectArray().ToArray();
         public static readonly IEnumerable<object[]> EndPadded42s = ConvertToNumberTests.String42s_Strict.Select(o => (o[0] as string) + " \t ").AsObjectArray().ToArray();
@@ -19,7 +19,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.TrimStart).Options;
 
-            ConvertAssert.Converts(value, 42, options); 
+            ConvertAssert.Converts(value, 42, options);
         }
 
         [Theory]
@@ -49,7 +49,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.None).Options;
 
-            ConvertAssert.ConvertFails<int>(value, options); 
+            ConvertAssert.ConvertFails<int>(value, options);
         }
 
         [Theory]

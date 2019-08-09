@@ -8,7 +8,7 @@ namespace Ockham.Data.Tests
 {
     using static Factories;
 
-    public partial class ConvertForceTests
+    public class ConvertForceTests
     {
         public static IEnumerable<object[]> Defaults = Sets(
             Set(typeof(int), DBNull.Value, 0),

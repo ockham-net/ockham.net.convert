@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Ockham.Data.Tests
 {
-    [ExcludeFromCodeCoverage]
     public static class TestExtensions
     {
         public static Action AsAction(this Func<object> func, bool ignoreError = false)

@@ -7,7 +7,7 @@ using static Ockham.Data.Tests.Factories;
 
 namespace Ockham.Data.Tests
 {
-    public partial class StringAsNullTests
+    public class ConvertToEnumTests
     {
         public enum OtherEnum
         {

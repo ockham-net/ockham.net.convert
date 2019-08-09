@@ -5,7 +5,7 @@ using Xunit;
 namespace Ockham.Data.Tests
 {
     // Test that ConvertOptions.Enums settings have the intended effect
-    public partial class ConvertToEnumTests
+    public class EnumOptionsTests
     {
         [Fact]
         public static void ThrowNames()

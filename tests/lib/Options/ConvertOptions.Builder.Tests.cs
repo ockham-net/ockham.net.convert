@@ -1,12 +1,10 @@
 ﻿using Ockham.Data.Tests.Fixtures;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    [ExcludeFromCodeCoverage]
     public class ConvertOptionsBuilderTests
     {
         [Fact]

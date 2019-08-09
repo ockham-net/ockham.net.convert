@@ -1,7 +1,0 @@
-T:Ockham.Data.BoolConverter
-T:Ockham.Data.Converter
-T:Ockham.Data.Convert
-T:Ockham.Data.ConverterDelegate
-T:Ockham.Data.ConverterDelegate`1
-T:Ockham.Data.GuidConverter
-T:Ockham.Data.TimeSpanConverter

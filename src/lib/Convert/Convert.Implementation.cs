@@ -37,7 +37,7 @@ namespace Ockham.Data
                 }
                 else if (ignoreError)
                 {
-                    return valueOnError ?? default;
+                    return valueOnError ?? Activator.CreateInstance(targetType);
                 }
                 else
                 {

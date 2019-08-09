@@ -41,10 +41,10 @@ namespace Ockham.Data.Tests
             foreach (var options in new[] { ConvertOptions.Default, OptionsVariant.EmptyStringAsNull, OptionsVariant.WhitespaceAsNull })
             {
                 // Force always converts to null
-                TestOverloads<CelestialBody>(ConvertOverload.Force, "", options, (opts, invoke) =>
-                {
-                    Assert.Null(invoke());
-                });
+                TestOverloads<CelestialBody>(ConvertOverload.Force, "", options, invoke =>
+               {
+                   Assert.Null(invoke());
+               });
             }
 
             foreach (var options in new[] { ConvertOptions.Default })
@@ -72,7 +72,7 @@ namespace Ockham.Data.Tests
             foreach (var options in new[] { ConvertOptions.Default, OptionsVariant.EmptyStringAsNull })
             {
                 // Force always converts to null
-                TestOverloads<CelestialBody>(ConvertOverload.Force, whitespace, options, (opts, invoke) =>
+                TestOverloads<CelestialBody>(ConvertOverload.Force, whitespace, options, invoke =>
                 {
                     Assert.Null(invoke());
                 });

@@ -49,7 +49,7 @@ namespace Ockham.Data.Tests
         private static void TestErrorMessage<T>(object value, string valString, string typeName)
         {
             string pattern = $"^Cannot convert empty value .*{valString}.* to value type .*{typeName}.*$";
-            TestOverloads<T>(ConvertOverload.To, value, ConvertOptions.Default, (options, invoke) =>
+            TestOverloads<T>(ConvertOverload.To, value, ConvertOptions.Default, ( invoke) =>
             {
                 ThrowAssert.Throws(() => invoke(), pattern);
             });

@@ -47,11 +47,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(StringData))]
         public void ConvertToString(object value, string expected)
         {
-            TestOverloads<string>(value, ConvertOptions.Default, (options, invoke) =>
-            {
-                var result = invoke() as string;
-                Assert.Equal(expected, result);
-            });
+            ConvertAssert.Converts(value, expected);
         }
 
     }

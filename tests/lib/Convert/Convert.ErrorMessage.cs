@@ -1,8 +1,6 @@
 ﻿using Ockham.Data.Tests.Fixtures;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using Xunit;
 using static Ockham.Data.Tests.Factories;
 
@@ -71,6 +69,5 @@ namespace Ockham.Data.Tests
         {
             Assert.Equal(valString, Convert.FormatValue(value));
         }
-
     }
 }

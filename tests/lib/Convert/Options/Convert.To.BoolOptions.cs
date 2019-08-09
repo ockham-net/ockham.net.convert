@@ -10,7 +10,7 @@ namespace Ockham.Data.Tests
     public partial class ConvertToBoolTests
     {
 
-        private static readonly ConvertOptions TrueTYes
+        private static readonly ConvertOptions TrueStringOptions
             = ConvertOptionsBuilder.Default.WithTrueStrings("t", "yes").Options;
 
         public static IEnumerable<object[]> TrueStringValidData = Values(
@@ -25,25 +25,17 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(TrueStringValidData))]
         public static void TrueStringValid(string value)
         {
-            TestCustomOverloads<bool>(value, TrueTYes, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<bool>(result);
-                Assert.True((bool)invoke());
-            });
+            ConvertAssert.Converts(value, true, TrueStringOptions);
         }
 
         [Theory]
         [MemberData(nameof(TrueStringInvalidData))]
         public static void TrueStringInvalid(string value)
         {
-            TestCustomOverloads<bool>(ConvertOverload.To, value, TrueTYes, invoke =>
-            {
-                ThrowAssert.ThrowsAny(invoke);
-            });
+            ConvertAssert.ConvertFails<bool>(value, TrueStringOptions);
         }
 
-        private static readonly ConvertOptions FalseFNo
+        private static readonly ConvertOptions FalseStringOptions
          = ConvertOptionsBuilder.Default.WithFalseStrings("f", "no").Options;
 
         public static IEnumerable<object[]> FalseStringValidData = Values(
@@ -58,22 +50,14 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(FalseStringValidData))]
         public static void FalseStringValid(string value)
         {
-            TestCustomOverloads<bool>(value, FalseFNo, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<bool>(result);
-                Assert.False((bool)invoke());
-            });
+            ConvertAssert.Converts(value, false, FalseStringOptions);
         }
 
         [Theory]
         [MemberData(nameof(FalseStringInvalidData))]
         public static void FalseStringInvalid(string value)
         {
-            TestCustomOverloads<bool>(ConvertOverload.To, value, FalseFNo, invoke =>
-            {
-                ThrowAssert.ThrowsAny(invoke);
-            });
+            ConvertAssert.ConvertFails<bool>(value, FalseStringOptions);
         }
     }
 }

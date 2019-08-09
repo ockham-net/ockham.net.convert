@@ -1,17 +1,7 @@
-﻿using Ockham.Data.Tests.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using Xunit;
+﻿using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    using static Factories;
-    using static ConvertTestRunner;
-
     // Test that ConvertOptions.Numbers settings have the intended effect
     public partial class ConvertToNumberTests
     {
@@ -23,12 +13,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.AllowDigitSeparator).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options); 
         }
 
         [Theory]
@@ -39,12 +24,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.HexString).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options); 
         }
 
         [Theory]
@@ -56,12 +36,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.HexString | ParseNumericStringFlags.AllowDigitSeparator).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options); 
         }
 
 
@@ -73,12 +48,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.OctalString).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options); 
         }
 
         [Theory]
@@ -90,14 +60,8 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.OctalString | ParseNumericStringFlags.AllowDigitSeparator).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options); 
         }
-
 
         [Theory]
         [InlineData(BIN_42)]
@@ -107,12 +71,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.BinaryString).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options);
         }
 
         [Theory]
@@ -124,12 +83,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.BinaryString | ParseNumericStringFlags.AllowDigitSeparator).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options);
         }
 
         [Theory]
@@ -140,10 +94,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.None).Options;
 
-            TestCustomOverloads<int>(ConvertOverload.To, value, options, convert =>
-            {
-                Assert.ThrowsAny<SystemException>(() => convert());
-            });
+            ConvertAssert.ConvertFails<int>(value, options);
         }
 
         [Theory]
@@ -153,10 +104,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.HexString).Options;
 
-            TestCustomOverloads<int>(ConvertOverload.To, value, options, convert =>
-            {
-                Assert.ThrowsAny<SystemException>(() => convert());
-            });
+            ConvertAssert.ConvertFails<int>(value, options);
         }
 
         [Theory]
@@ -166,10 +114,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.OctalString).Options;
 
-            TestCustomOverloads<int>(ConvertOverload.To, value, options, convert =>
-            {
-                Assert.ThrowsAny<SystemException>(() => convert());
-            });
+            ConvertAssert.ConvertFails<int>(value, options);
         }
 
         [Theory]
@@ -179,12 +124,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithNumberOptions(ParseNumericStringFlags.BinaryString).Options;
 
-            TestCustomOverloads<int>(ConvertOverload.To, value, options, convert =>
-            {
-                Assert.ThrowsAny<SystemException>(() => convert());
-            });
+            ConvertAssert.ConvertFails<int>(value, options);
         }
-
-
     }
 }

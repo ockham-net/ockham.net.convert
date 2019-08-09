@@ -1,14 +1,9 @@
-﻿using Ockham.Data.Tests.Fixtures;
-using System;
-using System.Reflection;
-using Xunit;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
+using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    using static ConvertTestRunner;
-
     // Test that ConvertOptions.Enums settings have the intended effect
     public partial class ConvertFromStringTests
     {
@@ -24,12 +19,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.TrimStart).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options); 
         }
 
         [Theory]
@@ -39,12 +29,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.TrimEnd).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options);
         }
 
         [Theory]
@@ -54,14 +39,8 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.TrimAll).Options;
 
-            TestCustomOverloads<int>(value, options, convert =>
-            {
-                var result = convert();
-                Assert.IsType<int>(result);
-                Assert.Equal(42, (int)result);
-            });
+            ConvertAssert.Converts(value, 42, options);
         }
-
 
         [Theory]
         [MemberData(nameof(StartPadded42s))]
@@ -70,12 +49,8 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.None).Options;
 
-            TestCustomOverloads<int>(ConvertOverload.To, value, options, convert =>
-            {
-                Assert.ThrowsAny<SystemException>(() => convert());
-            });
+            ConvertAssert.ConvertFails<int>(value, options); 
         }
-
 
         [Theory]
         [MemberData(nameof(StartPadded42s))]
@@ -84,12 +59,8 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.TrimEnd).Options;
 
-            TestCustomOverloads<int>(ConvertOverload.To, value, options, convert =>
-            {
-                Assert.ThrowsAny<SystemException>(() => convert());
-            });
+            ConvertAssert.ConvertFails<int>(value, options);
         }
-
 
         [Theory]
         [MemberData(nameof(EndPadded42s))]
@@ -98,12 +69,8 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.None).Options;
 
-            TestCustomOverloads<int>(ConvertOverload.To, value, options, convert =>
-            {
-                Assert.ThrowsAny<SystemException>(() => convert());
-            });
+            ConvertAssert.ConvertFails<int>(value, options);
         }
-
 
         [Theory]
         [MemberData(nameof(EndPadded42s))]
@@ -112,10 +79,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithStringOptions(StringAsNullOption.NullReference, TrimStringFlags.TrimStart).Options;
 
-            TestCustomOverloads<int>(ConvertOverload.To, value, options, convert =>
-            {
-                Assert.ThrowsAny<SystemException>(() => convert());
-            });
+            ConvertAssert.ConvertFails<int>(value, options);
         }
     }
 }

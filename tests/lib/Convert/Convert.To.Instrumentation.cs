@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using Xunit;
 
 #if INSTRUMENT
@@ -27,7 +26,6 @@ namespace Ockham.Data.Tests
             2.0d,
             TestShortEnum.Two
         );
-
 
         // CountPastNullRef is incremented as long as input is not a null reference (and NOT the same type)
         [Theory]
@@ -88,6 +86,7 @@ namespace Ockham.Data.Tests
             });
         }
 
+        // Verify performance-critical path: Immediately return self for string input
         [Fact]
         public void ImmediateReturn_IsSelf_String()
         {
@@ -98,6 +97,7 @@ namespace Ockham.Data.Tests
             });
         }
 
+        // Verify performance-critical path: Immediately return self for int input
         [Fact]
         public void ImmediateReturn_IsSelf_Int()
         {
@@ -108,10 +108,10 @@ namespace Ockham.Data.Tests
             });
         }
 
+        // Verify performance-critical path: Immediately return self for class input
         [Fact]
         public void ImmediateReturn_IsSelf_Class()
-        {
-            // Function should immediatley return
+        { 
             TestOverloads<CelestialBody>(new NeutronStar(), ConvertOptions.Default, (options, invoke) =>
             {
                 lock (_instrumentLock)

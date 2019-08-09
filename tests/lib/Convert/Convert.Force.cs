@@ -2,13 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
     using static Factories;
-    using static ConvertTestRunner;
 
     public partial class ConvertForceTests
     {
@@ -31,19 +29,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(Defaults))]
         public static void ForceToTypeDefault(Type targetType, object value, object expected)
         {
-            TestCustomOverloads(ConvertOverload.Force, targetType, value, ConvertOptions.Default, convert =>
-            {
-                var result = convert();
-                if (expected == null)
-                {
-                    Assert.Null(result);
-                    return;
-                }
-
-                Assert.IsType(targetType, result);
-                Assert.IsType(targetType, expected);
-                Assert.Equal(expected, result);
-            });
+            ConvertAssert.Converts(ConvertOverload.Force, targetType, value, expected, ConvertOptions.Default);
         }
 
         [Theory]
@@ -81,6 +67,6 @@ namespace Ockham.Data.Tests
 
             result = Converter.Default.Force(input, defaultValue);
             Assert.Equal(defaultValue, result);
-        } 
+        }
     }
 }

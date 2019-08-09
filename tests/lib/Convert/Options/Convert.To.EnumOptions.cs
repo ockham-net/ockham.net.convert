@@ -1,12 +1,9 @@
 ﻿using Ockham.Data.Tests.Fixtures;
-using System;
 using System.Reflection;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
-    using static ConvertTestRunner;
-
     // Test that ConvertOptions.Enums settings have the intended effect
     public partial class ConvertToEnumTests
     {
@@ -16,10 +13,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithEnumOptions(UndefinedValueOption.Throw, UndefinedValueOption.Coerce).Options;
 
-            TestCustomOverloads<TestShortEnum>(ConvertOverload.To, "Foo", options, invoke =>
-            {
-                Assert.ThrowsAny<SystemException>(() => invoke());
-            });
+            ConvertAssert.ConvertFails<TestShortEnum>("Foo", options);
         }
 
         [Fact]
@@ -28,12 +22,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithEnumOptions(UndefinedValueOption.Ignore, UndefinedValueOption.Coerce).Options;
 
-            TestCustomOverloads<TestShortEnum>(ConvertOverload.To, "Foo", options, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<TestShortEnum>(result);
-                Assert.Equal(default(TestShortEnum), (TestShortEnum)result);
-            });
+            ConvertAssert.Converts("Foo", default(TestShortEnum), options);
         }
 
         [Fact]
@@ -42,10 +31,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithEnumOptions(UndefinedValueOption.Throw, UndefinedValueOption.Coerce).Options;
 
-            TestCustomOverloads<BindingFlags>(ConvertOverload.To, "Public, NonPublic, Noodles", options, invoke =>
-            {
-                Assert.ThrowsAny<SystemException>(() => invoke());
-            });
+            ConvertAssert.ConvertFails<BindingFlags>("Public, NonPublic, Noodles", options);
         }
 
         [Fact]
@@ -54,12 +40,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithEnumOptions(UndefinedValueOption.Ignore, UndefinedValueOption.Coerce).Options;
 
-            TestCustomOverloads<BindingFlags>(ConvertOverload.To, "Foo", options, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<BindingFlags>(result);
-                Assert.Equal(default, (BindingFlags)result);
-            });
+            ConvertAssert.Converts("Foo", default(BindingFlags), options);
         }
 
         [Fact]
@@ -71,12 +52,7 @@ namespace Ockham.Data.Tests
             string input = " Public, NonPublic, STATIC, Noodles";
             var expected = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 
-            TestCustomOverloads<BindingFlags>(ConvertOverload.To, input, options, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<BindingFlags>(result);
-                Assert.Equal(expected, (BindingFlags)result);
-            });
+            ConvertAssert.Converts(input, expected, options);
         }
 
         [Fact]
@@ -85,10 +61,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithEnumOptions(UndefinedValueOption.Throw, UndefinedValueOption.Throw).Options;
 
-            TestCustomOverloads<TestShortEnum>(ConvertOverload.To, 1234, options, invoke =>
-            {
-                ThrowAssert.Throws<InvalidCastException>(() => invoke(), "^Value 1234 is not defined");
-            });
+            ConvertAssert.ConvertFails<TestShortEnum>(1234, options, "^Value 1234 is not defined");
         }
 
         [Fact]
@@ -97,14 +70,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithEnumOptions(UndefinedValueOption.Throw, UndefinedValueOption.Ignore).Options;
 
-            short input = 3424;
-
-            TestCustomOverloads<TestShortEnum>(ConvertOverload.To, input, options, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<TestShortEnum>(result);
-                Assert.Equal(default, (TestShortEnum)result);
-            });
+            ConvertAssert.Converts((short)3424, default(TestShortEnum), options);
         }
 
         [Fact]
@@ -113,14 +79,7 @@ namespace Ockham.Data.Tests
             var options = ConvertOptions.Default.GetBuilder()
                 .WithEnumOptions(UndefinedValueOption.Throw, UndefinedValueOption.Coerce).Options;
 
-            short input = 3424;
-
-            TestCustomOverloads<TestShortEnum>(ConvertOverload.To, input, options, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<TestShortEnum>(result);
-                Assert.Equal(input, (short)result);
-            });
+            ConvertAssert.Converts((short)3424, (TestShortEnum)3424, options);
         }
 
         [Fact]
@@ -131,12 +90,8 @@ namespace Ockham.Data.Tests
 
             var input = (int)(TestFlags.Bit1 | TestFlags.Bit3) | 0x20;
 
-            TestCustomOverloads<TestFlags>(ConvertOverload.To, input, options, invoke =>
-            {
-                ThrowAssert.Throws<InvalidCastException>(() => invoke(), "^Bit 0x20 is not defined");
-            });
+            ConvertAssert.ConvertFails<TestShortEnum>(input, options, "^Bit 0x20 is not defined");
         }
-
 
         [Fact]
         public static void IgnoreFlagValues()
@@ -147,12 +102,7 @@ namespace Ockham.Data.Tests
             int input = (int)(TestFlags.Bit1 | TestFlags.Bit3) | 0x20;
             var expected = TestFlags.Bit1 | TestFlags.Bit3;
 
-            TestCustomOverloads<TestFlags>(ConvertOverload.To, input, options, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<TestFlags>(result);
-                Assert.Equal(expected, (TestFlags)result);
-            });
+            ConvertAssert.Converts(input, expected, options);
         }
 
         [Fact]
@@ -163,12 +113,7 @@ namespace Ockham.Data.Tests
 
             int input = 34324;
 
-            TestCustomOverloads<TestFlags>(ConvertOverload.To, input, options, invoke =>
-            {
-                var result = invoke();
-                Assert.IsType<TestFlags>(result);
-                Assert.Equal(input, (int)result);
-            });
+            ConvertAssert.Converts(input, (TestFlags)input, options);
         }
 
     }

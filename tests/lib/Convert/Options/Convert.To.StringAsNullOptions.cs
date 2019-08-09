@@ -50,7 +50,7 @@ namespace Ockham.Data.Tests
             foreach (var options in new[] { ConvertOptions.Default })
             {
                 // To fails because empty string is not considered null
-                TestCustomOverloads<CelestialBody>(ConvertOverload.To, true, "", options, (opts, invoke) =>
+                TestCustomOverloads<CelestialBody>(ConvertOverload.To, "", options, invoke =>
                 {
                     Assert.ThrowsAny<SystemException>(() => invoke());
                 });
@@ -58,7 +58,7 @@ namespace Ockham.Data.Tests
 
             foreach (var options in new[] { OptionsVariant.EmptyStringAsNull, OptionsVariant.WhitespaceAsNull })
             {
-                TestCustomOverloads<CelestialBody>(ConvertOverload.To, true, "", options, (opts, invoke) =>
+                TestCustomOverloads<CelestialBody>(ConvertOverload.To, "", options, invoke =>
                 {
                     Assert.Null(invoke());
                 });
@@ -78,7 +78,7 @@ namespace Ockham.Data.Tests
                 });
 
                 // To fails because whitespace string is not considered null
-                TestCustomOverloads<CelestialBody>(ConvertOverload.To, true, whitespace, options, (opts, invoke) =>
+                TestCustomOverloads<CelestialBody>(ConvertOverload.To, whitespace, options, invoke =>
                 {
                     Assert.ThrowsAny<SystemException>(() => invoke());
                 });
@@ -86,7 +86,7 @@ namespace Ockham.Data.Tests
 
             foreach (var options in new[] { OptionsVariant.WhitespaceAsNull })
             {
-                TestCustomOverloads<CelestialBody>(ConvertOverload.To, true, whitespace, options, (opts, invoke) =>
+                TestCustomOverloads<CelestialBody>(ConvertOverload.To, whitespace, options, invoke =>
                 {
                     Assert.Null(invoke());
                 });

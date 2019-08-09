@@ -25,7 +25,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(TrueStringValidData))]
         public static void TrueStringValid(string value)
         {
-            TestCustomOverloads<bool>(null, true, value, TrueTYes, (opts, invoke) =>
+            TestCustomOverloads<bool>(value, TrueTYes, invoke =>
             {
                 var result = invoke();
                 Assert.IsType<bool>(result);
@@ -37,7 +37,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(TrueStringInvalidData))]
         public static void TrueStringInvalid(string value)
         {
-            TestCustomOverloads<bool>(ConvertOverload.To, true, value, TrueTYes, (opts, invoke) =>
+            TestCustomOverloads<bool>(ConvertOverload.To, value, TrueTYes, invoke =>
             {
                 ThrowAssert.ThrowsAny(invoke);
             });
@@ -58,7 +58,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(FalseStringValidData))]
         public static void FalseStringValid(string value)
         {
-            TestCustomOverloads<bool>(null, true, value, FalseFNo, (opts, invoke) =>
+            TestCustomOverloads<bool>(value, FalseFNo, invoke =>
             {
                 var result = invoke();
                 Assert.IsType<bool>(result);
@@ -70,7 +70,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(FalseStringInvalidData))]
         public static void FalseStringInvalid(string value)
         {
-            TestCustomOverloads<bool>(ConvertOverload.To, true, value, FalseFNo, (opts, invoke) =>
+            TestCustomOverloads<bool>(ConvertOverload.To, value, FalseFNo, invoke =>
             {
                 ThrowAssert.ThrowsAny(invoke);
             });

@@ -35,7 +35,7 @@ namespace Ockham.Data.Tests
                     return star;
                 }).Options;
 
-            TestCustomOverloads<Star>(null, true, value, options, (opts, invoke) =>
+            TestCustomOverloads<Star>(value, options, invoke =>
             {
                 object result = null;
                 ConvertAssert.Increments(ref invokeCount, () => result = invoke());

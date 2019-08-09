@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Ockham.Data.Tests
 {
     [Flags]
     public enum ConvertOverload
     {
+        None = 0x0,
         To = 0x1,
         Force = 0x2,
         Generic = 0x10,
@@ -15,55 +18,84 @@ namespace Ockham.Data.Tests
         DefaultValue = 0x10000
     }
 
+    public delegate void ConvertTestCallback(Func<object> convert);
+
     public class ConvertTestRunner
     {
         /// <summary>
-        /// Test all possible converter overloads
+        /// Test all possible converter methods, converting to type <typeparamref name="T"/>
         /// </summary> 
         public static void TestOverloads<T>(object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
             => TestOverloads<T>(GetOverloads(), input, options, test);
 
         /// <summary>
-        /// Test only those overloads that use custom options (either static or implicitly b/c instance) 
+        /// Test only converter methods that use custom options, converting to type <paramref name="targetType"/>
         /// </summary> 
-        public static void TestCustomOverloads<T>(object input, ConvertOptions options, Action<Func<object>> test)
-            => TestCustomOverloads<T>(null, true, input, options, (opts, invoke) => test(invoke));
+        public static void TestCustomOverloads(Type targetType, object input, ConvertOptions options, ConvertTestCallback test)
+            => TestCustomOverloads(ConvertOverload.None, targetType, input, options, test);
 
         /// <summary>
-        /// Test only those overloads that use custom options (either static or implicitly b/c instance),
-        /// filtered for the provided <paramref name="flags"/>
+        /// Test only converter methods that use custom options, converting to type <paramref name="targetType"/>, filtered by <paramref name="flags"/>
         /// </summary> 
-        public static void TestCustomOverloads<T>(ConvertOverload flags, object input, ConvertOptions options, Action<Func<object>> test)
-            => TestCustomOverloads<T>(flags, true, input, options, (opts, invoke) => test(invoke));
-
+        public static void TestCustomOverloads(ConvertOverload flags, Type targetType, object input, ConvertOptions options, ConvertTestCallback test)
+            => (GetCustomTestInvoker(targetType))(flags, input, options, test);
 
         /// <summary>
-        /// Test only those overloads that use custom options (either static or implicitly b/c instance),
-        /// OR only those overloads that use default options (either static or implicitly via Converter.Default)
+        /// Test only converter methods that use custom options, converting to type <typeparamref name="T"/>
         /// </summary> 
-        public static void TestCustomOverloads<T>(ConvertOverload? flags, bool explicitOptions, object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
+        public static void TestCustomOverloads<T>(object input, ConvertOptions options, ConvertTestCallback test)
+            => TestCustomOverloads<T>(ConvertOverload.None, input, options, test);
+
+        /// <summary>
+        /// Test only converter methods that use custom options, converting to type <typeparamref name="T"/>, filtered by <paramref name="filter"/>
+        /// </summary> 
+        public static void TestCustomOverloads<T>(ConvertOverload filter, object input, ConvertOptions options, ConvertTestCallback test)
         {
             IEnumerable<ConvertOverload> overloads;
-            if (explicitOptions)
-            {
-                if (flags.HasValue)
-                {
-                    overloads = GetOverloads(flags.Value | ConvertOverload.Instance)
-                        .Concat(GetOverloads(flags.Value | ConvertOverload.Options));
-                }
-                else
-                {
-                    overloads = GetOverloads(ConvertOverload.Instance)
-                       .Concat(GetOverloads(ConvertOverload.Options));
-                }
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            overloads = GetOverloads(ConvertOverload.Instance)
+                    .Concat(GetOverloads(ConvertOverload.Options));
 
-            TestOverloads<T>(overloads, input, options, test);
+            if (filter != ConvertOverload.None) overloads = overloads.Where(flag => flag.HasBitFlag(filter));
+
+            TestOverloads<T>(overloads.ToArray(), input, options, (opts, invoke) => test(invoke));
         }
+
+        #region BuildDelegates
+        // =======================================================================================
+        //  Get wrapped generic delegates for ConvertOverload filter and target type
+        // =======================================================================================
+        private delegate void CustomTestInvoker(ConvertOverload filter, object input, ConvertOptions options, ConvertTestCallback test);
+
+        private static readonly Dictionary<Type, CustomTestInvoker> _testCustomDelegates = new Dictionary<Type, CustomTestInvoker>();
+
+        private static CustomTestInvoker GetCustomTestInvoker(Type targetType)
+        {
+            var mapForType = _testCustomDelegates;
+
+            if (mapForType.TryGetValue(targetType, out CustomTestInvoker @delegate)) return @delegate;
+            lock (mapForType)
+            {
+                if (mapForType.TryGetValue(targetType, out @delegate)) return @delegate;
+
+                var t_self = typeof(ConvertTestRunner);
+                var m_open = t_self.GetMethod("TestCustomOverloads", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(ConvertOverload), typeof(object), typeof(ConvertOptions), typeof(ConvertTestCallback) }, null);
+                var m_Generic = m_open.MakeGenericMethod(targetType);
+
+                List<ParameterExpression> parameters = new List<ParameterExpression>();
+                parameters.Add(Expression.Parameter(typeof(ConvertOverload), "filter"));
+                parameters.Add(Expression.Parameter(typeof(object), "input"));
+                parameters.Add(Expression.Parameter(typeof(ConvertOptions), "options"));
+                parameters.Add(Expression.Parameter(typeof(ConvertTestCallback), "test"));
+                var lambda = Expression.Lambda<CustomTestInvoker>(
+                    Expression.Call(m_Generic, parameters.ToArray()),
+                    parameters.ToArray()
+                );
+
+                return (mapForType[targetType] = lambda.Compile());
+            }
+        }
+        // =======================================================================================
+        #endregion
 
         public static void TestOverloads<T>(ConvertOverload? flags, object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
         {
@@ -121,11 +153,11 @@ namespace Ockham.Data.Tests
                 }
                 catch (Xunit.Sdk.XunitException ex)
                 {
-                    throw new ConvertAssertException($"Test failed for overload {overload}", ex);
+                    throw new ConvertAssertException($"Test failed for {FormatOverload(overload)}", ex);
                 }
                 catch (Exception ex)
                 {
-                    throw new ApplicationException($"Test failed for overload {overload}", ex);
+                    throw new ApplicationException($"Test failed for {FormatOverload(overload)}", ex);
                 }
             }
         }
@@ -219,6 +251,62 @@ namespace Ockham.Data.Tests
         }
 
 
+        private static string FormatOverload(ConvertOverload overload)
+        {
+            return _overloadSignatures.TryGetValue(overload, out string signature) ? signature : throw new NotImplementedException();
+        }
+
+        private static Dictionary<ConvertOverload, string> _overloadSignatures = new Dictionary<ConvertOverload, string>()
+        {
+            {
+                ConvertOverload.To,
+                "static method Convert.To(object value, Type targetType)"
+            },
+            {
+                ConvertOverload.To | ConvertOverload.Options,
+                "static method Convert.To(object value, Type targetType, ConvertOptions options)"
+            },
+            {
+                ConvertOverload.To | ConvertOverload.Generic,
+                "static method Convert.To<T>(object value)"
+            },
+            {
+                ConvertOverload.To | ConvertOverload.Generic | ConvertOverload.Options,
+                "static method Convert.To<T>(object value, ConvertOptions options)"
+            },
+            {
+                ConvertOverload.Force,
+                "static method Convert.Force(object value, Type targetType)"
+            },
+            {
+                ConvertOverload.Force | ConvertOverload.Generic,
+                "static method Convert.Force<T>(object value)"
+            },
+            {
+                ConvertOverload.Force | ConvertOverload.Generic | ConvertOverload.DefaultValue,
+                "static method Convert.Force<T>(object value, T defaultValue)"
+            },
+            {
+                ConvertOverload.Instance | ConvertOverload.To,
+                "instance method Converter.To(object value, Type targetType)"
+            },
+            {
+                ConvertOverload.Instance | ConvertOverload.To | ConvertOverload.Generic,
+                "instance method Converter.To<T>(object value)"
+            },
+            {
+                ConvertOverload.Instance | ConvertOverload.Force,
+                "instance method Converter.Force(object value, Type targetType)"
+            },
+            {
+                ConvertOverload.Instance | ConvertOverload.Force | ConvertOverload.Generic,
+                "instance method Converter.Force<T>(object value)"
+            },
+            {
+                ConvertOverload.Instance | ConvertOverload.Force | ConvertOverload.Generic | ConvertOverload.DefaultValue,
+                "instance method Converter.Force<T>(object value, T defaultValue)"
+            }
+        };
 
     }
 }

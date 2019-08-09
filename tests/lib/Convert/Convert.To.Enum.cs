@@ -35,7 +35,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(ConvertToEnumData))]
         public static void ConvertToEnum(object value, ConvertOptions options, TestShortEnum expected)
         {
-            TestCustomOverloads<TestShortEnum>(null, true, value, options, (opts, invoke) =>
+            TestCustomOverloads<TestShortEnum>(value, options, invoke =>
             {
                 var result = invoke();
                 Assert.IsType<TestShortEnum>(result);

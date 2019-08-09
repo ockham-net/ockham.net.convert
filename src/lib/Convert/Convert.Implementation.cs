@@ -153,18 +153,12 @@ namespace Ockham.Data
             if (targetType.IsEnum) return EnumConverter.ToEnumValue(value, targetType, options, ignoreError, valueOnError);
 
             // ---------------------------------------------------------------------------
-            //  Parse numeric baseN strings
+            //  Parse numeric strings
             // ---------------------------------------------------------------------------
-            if (value is string stringValue)
+            if ((value is string stringValue) && TypeInspection.IsNumberType(targetType, out TypeCode typeCode))
             {
-                if (TypeInspection.IsNumberType(targetType))
-                {
-                    if (options.ParseBaseN && Value.IsNumeric(stringValue, options.ParseFlage, out int @base) && @base != 10)
-                    {
-                        ulong ulongVal = System.Convert.ToUInt64(stringValue.Trim().Substring(2), @base);
-                        return ToStructValue(ulongVal, targetType, options, ignoreError, valueOnError);
-                    }
-                }
+                var result = NumberParser.Parse(stringValue, targetType, options, typeCode);
+                if (result != null) return result;
             }
 
             // ---------------------------------------------------------------------------
@@ -172,7 +166,7 @@ namespace Ockham.Data
             // ---------------------------------------------------------------------------
             if (value is IConvertible iConvertible)
             {
-                // Use the System.ChangeType method, which makes full use of any IConvertible implementation on the target type
+                // Use the System.ChangeType method, which makes use of any IConvertible implementation on the target type
                 try
                 {
                     return System.Convert.ChangeType(value, targetType);
@@ -183,10 +177,11 @@ namespace Ockham.Data
                 }
             }
 
+            /*
             // ---------------------------------------------------------------------------
             //  Fall back to VBConvert methods
             // ---------------------------------------------------------------------------
-            switch (System.Convert.GetTypeCode(targetType))
+            switch (Type.GetTypeCode(targetType))
             {
                 case TypeCode.Boolean:
                     return VBConvert.ToBoolean(value);
@@ -217,9 +212,11 @@ namespace Ockham.Data
                 case TypeCode.UInt64:
                     return VBConvert.ToULong(value);
             }
+            */
 
             // ---------------------------------------------------------------------------
-            //  Fall back to VBConvert.ChangeType
+            //  Fall back to VBConvert.ChangeType, which will find and invoke 
+            //  custom conversion operators
             // ---------------------------------------------------------------------------
             return VBConvert.ChangeType(value, targetType);
         }

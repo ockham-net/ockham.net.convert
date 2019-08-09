@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading;
 using Xunit;
 
+#if INSTRUMENT
 namespace Ockham.Data.Tests
 {
+    using static ConvertTestRunner;
 
-#if INSTRUMENT
-    public partial class ConvertTests
+    public partial class InstrumentationTests
     {
         public static readonly ConvertOptions CustomOptions
             = ConvertOptionsBuilder.Default
                 .WithTrueStrings("t", "y")
                 .WithFalseStrings("n", "f")
                 .Options;
-
 
         public static readonly object _instrumentLock = new object();
 
@@ -104,16 +104,74 @@ namespace Ockham.Data.Tests
         public void CountSameType(object value)
         {
             TestOverloads<int>(value, CustomOptions, (options, invoke) =>
-           {
+            {
                lock (_instrumentLock)
                    ConvertAssert.Increments(
                        ref options.CountPastSameType,
                        () => invoke(),
                        true
                    );
-           });
+            });
         }
-          
+
+
+        // Verify performance-critical path: Immediately return null for null input and target type is a reference type
+        [Fact]
+        public void ImmediateReturnForNullReference()
+        {
+            foreach (var variant in OptionsVariant.GetAll(new object(), true))
+            {
+                var options = variant.ConvertOptions;
+                ConvertAssert.DoesNotIncrement(
+                    ref options.CountPastNullRef,
+                    () => Convert.To(null, typeof(object), variant.ConvertOptions, variant.IgnoreError, variant.DefaultValue)
+                );
+            }
+        }
+
+        [Fact]
+        public void ImmediateReturn_IsSelf_String()
+        {
+            TestOverloads<string>("hi", CustomOptions, (options, invoke) =>
+            {
+                lock (_instrumentLock)
+                    ConvertAssert.DoesNotIncrement(
+                        ref options.CountPastSameType,
+                        () => invoke(),
+                        true
+                    );
+            });
+        }
+
+        [Fact]
+        public void ImmediateReturn_IsSelf_Int()
+        {
+            TestOverloads<int>(42, CustomOptions, (options, invoke) =>
+            {
+                lock (_instrumentLock)
+                    ConvertAssert.DoesNotIncrement(
+                        ref options.CountPastSameType,
+                        () => invoke(),
+                        true
+                    );
+            });
+        }
+
+        [Fact]
+        public void ImmediateReturn_IsSelf_Class()
+        {
+            // Function should immediatley return
+            TestOverloads<CelestialBody>(new NeutronStar(), CustomOptions, (options, invoke) =>
+            {
+                lock (_instrumentLock)
+                    ConvertAssert.DoesNotIncrement(
+                        ref options.CountPastSameType,
+                        () => invoke(),
+                        true
+                    );
+            });
+        }
     }
-#endif
 }
+
+#endif

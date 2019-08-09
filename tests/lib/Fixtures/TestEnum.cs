@@ -9,6 +9,7 @@ namespace Ockham.Data.Tests.Fixtures
         Zero = 0,
         One = 1,
         Two = 2,
+        FortyTwo = 42,
         FortyNine = 49
     }
 

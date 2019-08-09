@@ -9,7 +9,9 @@ using static Ockham.Data.Tests.Factories;
 
 namespace Ockham.Data.Tests
 {
-    public partial class ConvertTests
+    using static ConvertTestRunner;
+
+    public partial class StringAsNullTests
     {
         public static IEnumerable<object[]> StarData = Values("hi", 2, new object());
 
@@ -33,7 +35,7 @@ namespace Ockham.Data.Tests
                     return star;
                 }).Options;
 
-            TestOverloads<Star>(null, true, value, options, (opts, invoke) =>
+            TestCustomOverloads<Star>(null, true, value, options, (opts, invoke) =>
             {
                 object result = null;
                 ConvertAssert.Increments(ref invokeCount, () => result = invoke());

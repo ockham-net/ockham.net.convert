@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Reflection;
 
 namespace Ockham.Data
 {
-
     /// <summary>
     /// NOT part of the public API of this project. Type inspection per se is not the goal of the Ockham.NET.Convert module
     /// </summary>
     internal class TypeInspection
     {
-
         /// <summary>
         /// Determine if the specified type inherits from <see cref="System.Nullable{T}"/>
         /// </summary>
@@ -23,30 +20,30 @@ namespace Ockham.Data
         /// <summary>
         /// Determine if the specified type is a numeric (integer, float, or decimal) type. Returns true for enums.
         /// </summary> 
-        public static bool IsNumberType(Type type)
-        {
-            return _IsNumberType(type, false);
-        }
+        public static bool IsNumberType(Type type) => type.IsEnum || IsNumberType(type, out _);
 
-        private static bool _IsNumberType(Type type, bool integersOnly)
+        /// <summary>
+        /// Determine if the specified type is a numeric (integer, float, or decimal) type, and wether 
+        /// the numeric type is a signed number (can represent negative values)
+        /// </summary> 
+        public static bool IsNumberType(Type type, out TypeCode typeCode)
         {
-            if (type.IsEnum) return true;
-
-            switch (Type.GetTypeCode(type))
+            switch (typeCode = Type.GetTypeCode(type))
             {
-                case TypeCode.Byte:
+                case TypeCode.SByte:
                 case TypeCode.Int16:
                 case TypeCode.Int32:
                 case TypeCode.Int64:
-                case TypeCode.SByte:
+                case TypeCode.Single:
+                case TypeCode.Double:
+                case TypeCode.Decimal:
+                    return true;
+
+                case TypeCode.Byte:
                 case TypeCode.UInt16:
                 case TypeCode.UInt32:
                 case TypeCode.UInt64:
                     return true;
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                case TypeCode.Single:
-                    return !integersOnly;
             }
 
             return false;

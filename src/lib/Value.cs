@@ -34,7 +34,7 @@ namespace Ockham.Data
         /// <param name="value"></param> 
         /// <param name="parseFlags"></param>  
         public static bool IsNumeric(object value, ParseNumericStringFlags parseFlags)
-            => IsNumeric(value, parseFlags, out _);
+            => IsNumeric(value, parseFlags, out _, out _);
 
         /// <summary>
         /// Test if the input value is a non-null numeric type 
@@ -44,9 +44,12 @@ namespace Ockham.Data
         /// <param name="value"></param> 
         /// <param name="parseFlags"></param>  
         /// <param name="base">The radix (base) of the number</param>
-        internal static bool IsNumeric(object value, ParseNumericStringFlags parseFlags, out int @base)
+        /// <param name="hasSeparator">True if the input was a string and included a digit separator character</param>
+        internal static bool IsNumeric(object value, ParseNumericStringFlags parseFlags, out int @base, out bool hasSeparator)
         {
             @base = 10;
+            hasSeparator = false;
+
             if (null == value) return false;
             if (value is string sValue)
             {
@@ -60,6 +63,7 @@ namespace Ockham.Data
                     {
                         sValue = Regex.Replace(sValue, "([0-9a-fA-F])_+([0-9a-fA-F])", "$1$2");
                         changed = true;
+                        hasSeparator = true;
                     }
 
                     if (changed && double.TryParse(sValue, out _)) return true;

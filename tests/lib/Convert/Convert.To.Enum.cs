@@ -9,9 +9,10 @@ using static Ockham.Data.Tests.Factories;
 
 namespace Ockham.Data.Tests
 {
-    public partial class ConvertTests
-    {
+    using static ConvertTestRunner;
 
+    public partial class StringAsNullTests
+    {
         public enum OtherEnum
         {
             NineAndForty = 49
@@ -34,7 +35,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(ConvertToEnumData))]
         public static void ConvertToEnum(object value, ConvertOptions options, TestShortEnum expected)
         {
-            TestOverloads<TestShortEnum>(null, true, value, options, (opts, invoke) =>
+            TestCustomOverloads<TestShortEnum>(null, true, value, options, (opts, invoke) =>
             {
                 var result = invoke();
                 Assert.IsType<TestShortEnum>(result);

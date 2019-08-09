@@ -1,17 +1,13 @@
-﻿using Ockham.Data.Tests.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Collections.Generic;
 using Xunit;
 
 namespace Ockham.Data.Tests
 {
+    using static ConvertTestRunner;
     using static Factories;
 
     // Test that ConvertOptions.Booleans settings have the intended effect
-
-    public partial class ConvertTests
+    public partial class ConvertToBoolTests
     {
 
         private static readonly ConvertOptions TrueTYes
@@ -29,7 +25,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(TrueStringValidData))]
         public static void TrueStringValid(string value)
         {
-            TestOverloads<bool>(null, true, value, TrueTYes, (opts, invoke) =>
+            TestCustomOverloads<bool>(null, true, value, TrueTYes, (opts, invoke) =>
             {
                 var result = invoke();
                 Assert.IsType<bool>(result);
@@ -41,7 +37,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(TrueStringInvalidData))]
         public static void TrueStringInvalid(string value)
         {
-            TestOverloads<bool>(ConvertOverload.To, true, value, TrueTYes, (opts, invoke) =>
+            TestCustomOverloads<bool>(ConvertOverload.To, true, value, TrueTYes, (opts, invoke) =>
             {
                 ThrowAssert.ThrowsAny(invoke);
             });
@@ -62,7 +58,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(FalseStringValidData))]
         public static void FalseStringValid(string value)
         {
-            TestOverloads<bool>(null, true, value, FalseFNo, (opts, invoke) =>
+            TestCustomOverloads<bool>(null, true, value, FalseFNo, (opts, invoke) =>
             {
                 var result = invoke();
                 Assert.IsType<bool>(result);
@@ -74,7 +70,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(FalseStringInvalidData))]
         public static void FalseStringInvalid(string value)
         {
-            TestOverloads<bool>(ConvertOverload.To, true, value, FalseFNo, (opts, invoke) =>
+            TestCustomOverloads<bool>(ConvertOverload.To, true, value, FalseFNo, (opts, invoke) =>
             {
                 ThrowAssert.ThrowsAny(invoke);
             });

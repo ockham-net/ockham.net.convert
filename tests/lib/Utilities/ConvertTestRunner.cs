@@ -1,10 +1,6 @@
-﻿using Ockham.Data.Tests.Fixtures;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using Xunit;
 
 namespace Ockham.Data.Tests
 {
@@ -19,9 +15,63 @@ namespace Ockham.Data.Tests
         DefaultValue = 0x10000
     }
 
-    public partial class ConvertTests
+    public class ConvertTestRunner
     {
-        public static ConvertOverload[] GetOverloads(bool? instance = null)
+        /// <summary>
+        /// Test all possible converter overloads
+        /// </summary> 
+        public static void TestOverloads<T>(object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
+            => TestOverloads<T>(GetOverloads(), input, options, test);
+
+        /// <summary>
+        /// Test only those overloads that use custom options (either static or implicitly b/c instance) 
+        /// </summary> 
+        public static void TestCustomOverloads<T>(object input, ConvertOptions options, Action<Func<object>> test)
+            => TestCustomOverloads<T>(null, true, input, options, (opts, invoke) => test(invoke));
+
+        /// <summary>
+        /// Test only those overloads that use custom options (either static or implicitly b/c instance),
+        /// filtered for the provided <paramref name="flags"/>
+        /// </summary> 
+        public static void TestCustomOverloads<T>(ConvertOverload flags, object input, ConvertOptions options, Action<Func<object>> test)
+            => TestCustomOverloads<T>(flags, true, input, options, (opts, invoke) => test(invoke));
+
+
+        /// <summary>
+        /// Test only those overloads that use custom options (either static or implicitly b/c instance),
+        /// OR only those overloads that use default options (either static or implicitly via Converter.Default)
+        /// </summary> 
+        public static void TestCustomOverloads<T>(ConvertOverload? flags, bool explicitOptions, object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
+        {
+            IEnumerable<ConvertOverload> overloads;
+            if (explicitOptions)
+            {
+                if (flags.HasValue)
+                {
+                    overloads = GetOverloads(flags.Value | ConvertOverload.Instance)
+                        .Concat(GetOverloads(flags.Value | ConvertOverload.Options));
+                }
+                else
+                {
+                    overloads = GetOverloads(ConvertOverload.Instance)
+                       .Concat(GetOverloads(ConvertOverload.Options));
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            TestOverloads<T>(overloads, input, options, test);
+        }
+
+        public static void TestOverloads<T>(ConvertOverload? flags, object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
+        {
+            var overloads = flags.HasValue ? GetOverloads(flags.Value) : GetOverloads();
+            TestOverloads<T>(overloads, input, options, test);
+        }
+
+        private static ConvertOverload[] GetOverloads(bool? instance = null)
         {
             if (instance.HasValue)
             {
@@ -60,46 +110,6 @@ namespace Ockham.Data.Tests
         private static ConvertOptions GetOptionsUsed(ConvertOverload overload, ConvertOptions options)
             => (overload.HasBitFlag(ConvertOverload.Options) || overload.HasBitFlag(ConvertOverload.Instance)) ? options : ConvertOptions.Default;
 
-        /// <summary>
-        /// Test all possible converter overloads
-        /// </summary> 
-        private static void TestOverloads<T>(object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
-            => TestOverloads<T>(GetOverloads(), input, options, test);
-
-        /// <summary>
-        /// Test only those overloads that use custom options (either static or implicitly b/c instance),
-        /// OR only those overloads that use default options (either static or implicitly via Converter.Default)
-        /// </summary> 
-        private static void TestOverloads<T>(ConvertOverload? flags, bool explicitOptions, object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
-        {
-            IEnumerable<ConvertOverload> overloads;
-            if (explicitOptions)
-            {
-                if (flags.HasValue)
-                {
-                    overloads = GetOverloads(flags.Value | ConvertOverload.Instance)
-                        .Concat(GetOverloads(flags.Value | ConvertOverload.Options));
-                }
-                else
-                {
-                    overloads = GetOverloads(ConvertOverload.Instance)
-                       .Concat(GetOverloads(ConvertOverload.Options));
-                }
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-
-            TestOverloads<T>(overloads, input, options, test);
-        }
-
-        private static void TestOverloads<T>(ConvertOverload? flags, object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
-        {
-            var overloads = flags.HasValue ? GetOverloads(flags.Value) : GetOverloads();
-            TestOverloads<T>(overloads, input, options, test);
-        }
-
         private static void TestOverloads<T>(IEnumerable<ConvertOverload> overloads, object input, ConvertOptions options, Action<ConvertOptions, Func<object>> test)
         {
             foreach (var overload in overloads)
@@ -112,6 +122,10 @@ namespace Ockham.Data.Tests
                 catch (Xunit.Sdk.XunitException ex)
                 {
                     throw new ConvertAssertException($"Test failed for overload {overload}", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException($"Test failed for overload {overload}", ex);
                 }
             }
         }

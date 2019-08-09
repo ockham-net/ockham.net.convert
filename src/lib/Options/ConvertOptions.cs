@@ -51,18 +51,25 @@ namespace Ockham.Data
             this.Strings = this.GetOptions<StringConvertOptions>() ?? throw new ArgumentNullException("stringOptions");
             this.ValueTypes = this.GetOptions<ValueTypeConvertOptions>() ?? throw new ArgumentNullException("valueTypeOptions");
 
+            this.FlattenedOptions = FlattenOptions(this);
+
             // Memoize enum options
             this.IgnoreEnumNames = this.Enums.IgnoreUndefinedNames;
             this.ThrowEnumValues = this.Enums.UndefinedValues == UndefinedValueOption.Throw;
             this.CoerceEnumValues = this.Enums.CoerceUndefinedValues;
 
-            this.FlattenedOptions = FlattenOptions(this);
-            this.HasCustomConverters = this.Converters.Any();
+            // Number options
+            this.AllowSeparator = this.Numbers.AllowDigitSeparator;
+            this.ParseBaseN = this.Numbers.ParseHex | this.Numbers.ParseOctal | this.Numbers.ParseBinary;
+            this.ParseFlags = this.Numbers.ParseFlags;
+
+            // String options
             this.WhitespaceToNull = this.Strings.WhitespaceAsNull;
             this.StringToNull = this.WhitespaceToNull || this.Strings.EmptyStringAsNull;
+            this.TrimAll = this.Strings.TrimAll;
+
+            this.HasCustomConverters = this.Converters.Any();
             this.NullToValueDefault = this.ValueTypes.NullToValueDefault;
-            this.ParseBaseN = this.Numbers.ParseHex | this.Numbers.ParseOctal | this.Numbers.ParseBinary;
-            this.ParseFlage = this.Numbers.ParseFlags;
         }
 
         /// <summary>
@@ -129,16 +136,25 @@ namespace Ockham.Data
         internal FlattenedOptions FlattenedOptions { get; }
 
         internal bool HasCustomConverters { get; }
-        internal bool StringToNull { get; }
-        internal bool WhitespaceToNull { get; }
-        internal bool NullToValueDefault { get; }
-        internal bool ParseBaseN { get; }
 
+        // Enum options
         internal bool IgnoreEnumNames { get; }
         internal bool ThrowEnumValues { get; }
         internal bool CoerceEnumValues { get; }
 
-        internal ParseNumericStringFlags ParseFlage { get; }
+        // Number options
+        internal bool AllowSeparator { get; }
+        internal bool ParseBaseN { get; }
+
+        // String options
+        internal bool StringToNull { get; }
+        internal bool WhitespaceToNull { get; }
+        internal bool TrimAll { get; }
+
+        internal bool NullToValueDefault { get; }
+
+
+        internal ParseNumericStringFlags ParseFlags { get; }
 
         private static FlattenedOptions FlattenOptions(ConvertOptions options)
         {

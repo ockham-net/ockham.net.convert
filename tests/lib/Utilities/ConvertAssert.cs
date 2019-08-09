@@ -57,6 +57,53 @@ namespace Ockham.Data.Tests
             Assert.Equal(before, result);
         }
 
+
+        /// <summary>
+        /// Test that all possible conversion methods successfully convert <paramref name="value"/>
+        /// to <paramref name="expected"/> using default options 
+        /// </summary>
+        public static void Converts(Type targetType, object value, object expected)
+            => Converts(ConvertOverload.None, targetType, value, expected, ConvertOptions.Default);
+
+        /// <summary>
+        /// Test that all possible conversion methods successfully convert <paramref name="value"/>
+        /// to <paramref name="expected"/>, using default options
+        /// </summary>
+        public static void Converts(ConvertOverload filter, Type targetType, object value, object expected)
+            => Converts(filter, targetType, value, expected, ConvertOptions.Default);
+
+        /// <summary>
+        /// Test that all possible conversion methods successfully convert <paramref name="value"/>
+        /// to <paramref name="expected"/>, when using the provided <paramref name="options"/>
+        /// </summary> 
+        public static void Converts(Type targetType, object value, object expected, ConvertOptions options)
+            => Converts(ConvertOverload.OptionsOrInstance, targetType, value, expected, options);
+
+        /// <summary>
+        /// Test that all possible conversion methods successfully convert <paramref name="value"/>
+        /// to <paramref name="expected"/>, given provided <paramref name="options"/>
+        /// </summary> 
+        private static void Converts(ConvertOverload filter, Type targetType, object value, object expected, ConvertOptions options)
+        {
+            bool toNull = expected == null;
+            if (!toNull && !targetType.IsInstanceOfType(expected)) throw new InvalidCastException($"Expected value {expected} is not of target type {targetType.FullName}");
+
+            TestOverloads(filter, targetType, value, options, convert =>
+            {
+                var result = convert();
+                if (toNull)
+                {
+                    Assert.Null(result);
+                }
+                else
+                {
+                    Assert.IsAssignableFrom(targetType, result);
+                    Assert.Equal(expected, result);
+                }
+            });
+        }
+
+
         /// <summary>
         /// Test that all possible conversion methods successfully convert <paramref name="value"/>
         /// to <paramref name="expected"/> using default options
@@ -74,6 +121,7 @@ namespace Ockham.Data.Tests
             });
         }
 
+
         /// <summary>
         /// Test that all possible conversion methods successfully convert <paramref name="value"/>
         /// to <paramref name="expected"/>, given provided <paramref name="options"/>
@@ -88,36 +136,6 @@ namespace Ockham.Data.Tests
             });
         }
 
-        /// <summary>
-        /// Test that all possible conversion methods successfully convert <paramref name="value"/>
-        /// to <paramref name="expected"/>, given provided <paramref name="options"/>
-        /// </summary> 
-        public static void Converts(Type targetType, object value, object expected, ConvertOptions options)
-            => Converts(ConvertOverload.None, targetType, value, expected, options);
-
-        /// <summary>
-        /// Test that all possible conversion methods successfully convert <paramref name="value"/>
-        /// to <paramref name="expected"/>, given provided <paramref name="options"/>
-        /// </summary> 
-        public static void Converts(ConvertOverload filter, Type targetType, object value, object expected, ConvertOptions options)
-        {
-            bool toNull = expected == null;
-            if (!toNull && !targetType.IsInstanceOfType(expected)) throw new InvalidCastException($"Expected value {expected} is not of target type {targetType.FullName}");
-
-            TestCustomOverloads(filter, targetType, value, options, convert =>
-            {
-                var result = convert();
-                if (toNull)
-                {
-                    Assert.Null(result);
-                }
-                else
-                {
-                    Assert.IsType(targetType, result);
-                    Assert.Equal(expected, result);
-                }
-            });
-        }
 
         /// <summary>
         /// Test that all possible conversion methods convert <paramref name="value"/>

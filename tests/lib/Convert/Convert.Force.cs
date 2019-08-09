@@ -29,7 +29,7 @@ namespace Ockham.Data.Tests
         [MemberData(nameof(Defaults))]
         public static void ForceToTypeDefault(Type targetType, object value, object expected)
         {
-            ConvertAssert.Converts(ConvertOverload.Force, targetType, value, expected, ConvertOptions.Default);
+            ConvertAssert.Converts(ConvertOverload.Force, targetType, value, expected);
         }
 
         [Theory]

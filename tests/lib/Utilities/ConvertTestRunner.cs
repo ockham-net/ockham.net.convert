@@ -130,7 +130,7 @@ namespace Ockham.Data.Tests
                 if (mapForType.TryGetValue(targetType, out @delegate)) return @delegate;
 
                 var t_self = typeof(ConvertTestRunner);
-                var m_open = t_self.GetMethod("TestCustomOverloads", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(ConvertOverload), typeof(object), typeof(ConvertOptions), typeof(ConvertTestCallback) }, null);
+                var m_open = t_self.GetMethod("TestOverloads", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(ConvertOverload), typeof(object), typeof(ConvertOptions), typeof(ConvertTestCallback) }, null);
                 var m_Generic = m_open.MakeGenericMethod(targetType);
 
                 List<ParameterExpression> parameters = new List<ParameterExpression>();

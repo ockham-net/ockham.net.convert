@@ -90,7 +90,7 @@ namespace Ockham.Data.Tests
 
             var input = (int)(TestFlags.Bit1 | TestFlags.Bit3) | 0x20;
 
-            ConvertAssert.ConvertFails<TestShortEnum>(input, options, "^Bit 0x20 is not defined");
+            ConvertAssert.ConvertFails<TestFlags>(input, options, "^Bit 0x20 is not defined");
         }
 
         [Fact]

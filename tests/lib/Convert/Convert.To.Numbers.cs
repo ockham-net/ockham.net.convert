@@ -127,8 +127,12 @@ namespace Ockham.Data.Tests
         [Theory]
         [MemberData(nameof(Decimal42s_x_NumberTypes))]
         public static void ParseAll(object value, Type targetType)
-        {
-            var expected = System.Convert.ChangeType(42, targetType);
+        { 
+            var expected =
+                targetType.IsEnum
+                    ? Enum.ToObject(targetType, 42)
+                    : System.Convert.ChangeType(42, targetType);
+
             ConvertAssert.Converts(targetType, value, expected, ConvertOptions.Default);
         }
 

@@ -15,11 +15,13 @@ namespace Ockham.Data.Tests
             Set(typeof(TimeSpan), null, TimeSpan.Zero),
             Set(typeof(Amount), null, default(Amount)),
             Set(typeof(DateTime), null, default(DateTime)),
+            Set(typeof(int?), DBNull.Value, null),
             Set(typeof(Star), Encoding.UTF8, null),
             Set(typeof(int), "adlkasdlkasjdsa", 0),
             Set(typeof(TimeSpan), "adlkasdlkasjdsa", TimeSpan.Zero),
             Set(typeof(Amount), "adlkasdlkasjdsa", default(Amount)),
             Set(typeof(DateTime), "adlkasdlkasjdsa", default(DateTime)),
+            Set(typeof(int?), "adlkasdlkasjdsa", null),
             Set(typeof(Star), "adlkasdlkasjdsa", null)
         );
 
@@ -37,6 +39,13 @@ namespace Ockham.Data.Tests
         public static void ForceToExplicitDefault_Int(object value)
         {
             ForceToExplicitDefault(value, 42);
+        }
+
+        [Theory]
+        [MemberData(nameof(Unconvertible))]
+        public static void ForceToExplicitDefault_Nullable(object value)
+        {
+            ForceToExplicitDefault(value, (int?)42);
         }
 
         [Theory]
@@ -66,6 +75,7 @@ namespace Ockham.Data.Tests
             Assert.Equal(defaultValue, result);
 
             result = Converter.Default.Force(input, defaultValue);
+            Assert.IsAssignableFrom<T>(result);
             Assert.Equal(defaultValue, result);
         }
     }

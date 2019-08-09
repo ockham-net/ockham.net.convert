@@ -107,20 +107,29 @@ namespace Ockham.Data.Tests
         /// <summary>
         /// Test that all possible conversion methods successfully convert <paramref name="value"/>
         /// to <paramref name="expected"/> using default options
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="expected"></param>
+        /// </summary> 
         public static void Converts<T>(object value, T expected)
         {
             TestOverloads<T>(value, ConvertOptions.Default, invoke =>
             {
                 var result = invoke();
-                Assert.IsType<T>(result);
+                Assert.IsAssignableFrom<T>(result);
                 Assert.Equal(expected, (T)result);
             });
         }
 
+        /// <summary>
+        /// Test that all possible conversion methods successfully convert <paramref name="value"/>
+        /// to null using default options
+        /// </summary> 
+        public static void ConvertsToNull<T>(object value)
+        {
+            TestOverloads<T>(value, ConvertOptions.Default, invoke =>
+            {
+                var result = invoke();
+                Assert.Null(result);
+            });
+        }
 
         /// <summary>
         /// Test that all possible conversion methods successfully convert <paramref name="value"/>

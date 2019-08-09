@@ -10,7 +10,7 @@ namespace Ockham.Data
         /// <summary>
         /// This method avoids boxing or lifting value types, but requires compile-time knowledge of target type. 
         /// </summary> 
-        internal static T ToStruct<T>(object value, ConvertOptions options, bool ignoreError, T? valueOnError) where T : struct
+        internal static T ToStruct<T>(object value, ConvertOptions options) where T : struct
         {
             // Do NOT check for same type here. That should already be done by calling functions
 
@@ -25,11 +25,7 @@ namespace Ockham.Data
             {
                 if (options.NullToValueDefault)
                 {
-                    return default;
-                }
-                else if (ignoreError)
-                {
-                    return valueOnError ?? default;
+                    return default(T);
                 }
                 else
                 {
@@ -42,7 +38,7 @@ namespace Ockham.Data
             Interlocked.Increment(ref options.CountPastEmptyValue);
 #endif
 
-            return (T)ToStructValue(value, typeof(T), options, ignoreError, valueOnError);
+            return (T)ToStructValue(value, typeof(T), options, false, null);
         }
 
         /*

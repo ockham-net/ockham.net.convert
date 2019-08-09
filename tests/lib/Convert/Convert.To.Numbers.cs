@@ -8,22 +8,21 @@ namespace Ockham.Data.Tests
 {
     using static Factories;
 
-    // Test that ConvertOptions.Numbers settings have the intended effect
     public partial class ConvertToNumberTests
     {
-        private const sbyte SBYTE_42 = 42;
-        private const short INT16_42 = 42;
-        private const int INT32_42 = 42;
-        private const long INT64_42 = 42;
+        internal const sbyte SBYTE_42 = 42;
+        internal const short INT16_42 = 42;
+        internal const int INT32_42 = 42;
+        internal const long INT64_42 = 42;
 
-        private const byte BYTE_42 = 42;
-        private const ushort UINT16_42 = 42;
-        private const uint UINT32_42 = 42;
-        private const ulong UINT64_42 = 42;
+        internal const byte BYTE_42 = 42;
+        internal const ushort UINT16_42 = 42;
+        internal const uint UINT32_42 = 42;
+        internal const ulong UINT64_42 = 42;
 
-        private const float FLOAT_42 = 42;
-        private const double DOUBLE_42 = 42;
-        private const decimal DEC_42 = 42;
+        internal const float FLOAT_42 = 42;
+        internal const double DOUBLE_42 = 42;
+        internal const decimal DEC_42 = 42;
 
         private const TestShortEnum ENUM_42 = TestShortEnum.FortyTwo;
 
@@ -127,7 +126,7 @@ namespace Ockham.Data.Tests
         [Theory]
         [MemberData(nameof(Decimal42s_x_NumberTypes))]
         public static void ParseAll(object value, Type targetType)
-        { 
+        {
             var expected =
                 targetType.IsEnum
                     ? Enum.ToObject(targetType, 42)
@@ -239,5 +238,81 @@ namespace Ockham.Data.Tests
             var expected = System.Convert.ToDouble(ulong.MaxValue);
             ConvertAssert.Converts(value, expected, ParseAllOptions);
         }
+
+
+        public static readonly Converter DefaultConverter = Converter.Default;
+        public static readonly Converter AllowSepConverter = OptionsVariant.AllowSeparator.GetConverter();
+        public static readonly Converter ParseHexConverter = OptionsVariant.ParseHex.GetConverter();
+        public static readonly Converter ParseOctalConverter = OptionsVariant.ParseOctal.GetConverter();
+        public static readonly Converter ParseBinaryConverter = OptionsVariant.ParseBinary.GetConverter();
+        public static readonly Converter ParseAllConverter = ParseAllOptions.GetConverter();
+
+        [Theory]
+        [MemberData(nameof(Decimal42s_Strict))]
+        public static void IsNumeric(object value)
+        {
+            Assert.True(DefaultConverter.IsNumeric(value));
+            Assert.True(AllowSepConverter.IsNumeric(value));
+            Assert.True(ParseHexConverter.IsNumeric(value));
+            Assert.True(ParseOctalConverter.IsNumeric(value));
+            Assert.True(ParseBinaryConverter.IsNumeric(value));
+            Assert.True(ParseAllConverter.IsNumeric(value));
+        }
+
+        [Theory]
+        [InlineData(STR_INT_42_SEP)]
+        public static void IsNumeric_Sep(object value)
+        {
+            Assert.True(AllowSepConverter.IsNumeric(value));
+            Assert.True(ParseAllConverter.IsNumeric(value));
+
+            Assert.False(DefaultConverter.IsNumeric(value));
+            Assert.False(ParseHexConverter.IsNumeric(value));
+            Assert.False(ParseOctalConverter.IsNumeric(value));
+            Assert.False(ParseBinaryConverter.IsNumeric(value));
+        }
+
+        [Theory]
+        [InlineData(HEX_42)]
+        [InlineData(HEX_42_ALT)]
+        public static void IsNumeric_Hex(object value)
+        {
+            Assert.True(ParseHexConverter.IsNumeric(value));
+            Assert.True(ParseAllConverter.IsNumeric(value));
+
+            Assert.False(DefaultConverter.IsNumeric(value));
+            Assert.False(AllowSepConverter.IsNumeric(value));
+            Assert.False(ParseOctalConverter.IsNumeric(value));
+            Assert.False(ParseBinaryConverter.IsNumeric(value));
+        }
+
+        [Theory]
+        [InlineData(OCT_42)]
+        [InlineData(OCT_42_ALT)]
+        public static void IsNumeric_Octal(object value)
+        {
+            Assert.True(ParseOctalConverter.IsNumeric(value));
+            Assert.True(ParseAllConverter.IsNumeric(value));
+
+            Assert.False(DefaultConverter.IsNumeric(value));
+            Assert.False(AllowSepConverter.IsNumeric(value));
+            Assert.False(ParseHexConverter.IsNumeric(value));
+            Assert.False(ParseBinaryConverter.IsNumeric(value));
+        }
+
+        [Theory]
+        [InlineData(BIN_42)]
+        [InlineData(BIN_42_ALT)]
+        public static void IsNumeric_Binary(object value)
+        {
+            Assert.True(ParseBinaryConverter.IsNumeric(value));
+            Assert.True(ParseAllConverter.IsNumeric(value));
+
+            Assert.False(DefaultConverter.IsNumeric(value));
+            Assert.False(AllowSepConverter.IsNumeric(value));
+            Assert.False(ParseHexConverter.IsNumeric(value));
+            Assert.False(ParseOctalConverter.IsNumeric(value));
+        }
+
     }
 }

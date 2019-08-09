@@ -57,6 +57,14 @@ namespace Ockham.Data.Tests
             Assert.Equal(before, result);
         }
 
+        /// <summary>
+        /// Assert that provided <paramref name="value"/> matches the type and value of <paramref name="expected"/>
+        /// </summary> 
+        public static void Equal<T>(T expected, object value)
+        {
+            Assert.IsAssignableFrom<T>(value);
+            Assert.Equal<T>(expected, (T)value);
+        }
 
         /// <summary>
         /// Test that all possible conversion methods successfully convert <paramref name="value"/>

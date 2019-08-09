@@ -17,6 +17,23 @@
         public static ConvertOptions NullToValueDefault { get; }
             = ConvertOptionsBuilder.Default
                 .WithValueTypeOptions(ValueTypeConvertFlags.NullToValueDefault).Options;
+
+        public static ConvertOptions AllowSeparator { get; }
+            = ConvertOptionsBuilder.Default
+                .WithNumberOptions(ParseNumericStringFlags.AllowDigitSeparator).Options;
+
+        public static ConvertOptions ParseHex { get; }
+            = ConvertOptionsBuilder.Default
+                .WithNumberOptions(ParseNumericStringFlags.HexString).Options;
+
+        public static ConvertOptions ParseOctal { get; }
+            = ConvertOptionsBuilder.Default
+                .WithNumberOptions(ParseNumericStringFlags.OctalString).Options;
+
+        public static ConvertOptions ParseBinary { get; }
+            = ConvertOptionsBuilder.Default
+                .WithNumberOptions(ParseNumericStringFlags.BinaryString).Options;
+
     }
 
 }
